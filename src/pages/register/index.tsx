@@ -16,7 +16,12 @@ import Header from "src/layouts/components/Header/Header";
 import Footer from "src/layouts/components/Footer/Footer";
 import StepperSignUp from "src/layouts/components/Stepper/StepperSignUp";
 
-const Register = () => {
+import { PrismaClient } from '@prisma/client';
+
+const Register = (props: any) => {
+
+    const universities = props.data;
+
     return (
         <Box
             py={7.5}
@@ -42,7 +47,7 @@ const Register = () => {
             />
             <Header />
             <Box sx={{ width: "100%", maxWidth: "560px" }}>
-                <StepperSignUp />
+                <StepperSignUp universities={universities} />
             </Box>
             <Footer />
         </Box>
@@ -52,5 +57,19 @@ const Register = () => {
 Register.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 
 Register.guestGuard = true;
+
+export async function getStaticProps() {
+    const prisma = new PrismaClient();
+
+    //const someData = await prisma.$queryRawUnsafe('SELECT * FROM Universities WHERE Domains = "acu.edu";');
+    
+    const someData = await prisma.universities.findMany();
+
+    return {
+      props: {
+        data: someData,
+      },
+    };
+  }
 
 export default Register;

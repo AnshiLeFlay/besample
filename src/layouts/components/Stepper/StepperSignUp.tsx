@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState, ChangeEvent } from "react";
+import React, { Fragment, useState, ChangeEvent } from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -20,6 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 
 // ** Icon Imports
 
@@ -41,6 +42,7 @@ import {
 import Icon from "src/@core/components/icon";
 import Email from "./Email";
 import Holder from "./Holder";
+import StepMessage from "./StepMessage";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
@@ -94,8 +96,11 @@ const StepperSx = {
     },
 };
 
-const StepperSignUp = () => {
+const StepperSignUp = (props: any) => {
     // ** States
+    const [email, setEmail] = useState<string>("");
+    const [checked, setChecked] = useState<boolean>(false);
+    const [university, setUniversity] = useState<string>("");
     const [showPassword1, setShowPassword1] = useState<boolean>(false);
     const [showPassword2, setShowPassword2] = useState<boolean>(false);
     const [activeStep, setActiveStep] = useState<number>(0);
@@ -107,12 +112,16 @@ const StepperSignUp = () => {
     });
     const [affilationVal, setAffilationVal] = useState<string>("yes");
 
+    const eduData = props.universities;
+
+    //console.log('test data', data);
+
     // Handle Stepper
-    /*
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
-  }
-  */
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
     const handleChangeAffilation = (event: ChangeEvent<HTMLInputElement>) => {
         setAffilationVal((event.target as HTMLInputElement).value);
     };
@@ -125,7 +134,47 @@ const StepperSignUp = () => {
     };
     const handleReset = () => {
         setActiveStep(0);
+        setChecked(false);
+        setUniversity("");
         setState({ ...state, password: "", password2: "" });
+    };
+
+    const checkEmail = () => {
+        //проверить на правильность email
+        //для простоты будем считать что почта валидная
+
+        const emailDomain = email.split("@")[1];
+
+        if (emailDomain === undefined) return;
+
+        for (let i = 0; i < eduData.length; i++) {
+            let str: string = eduData[i].Domains; //.indexOf(emailArr[1]);
+
+            if (str !== null) {
+                let needle = emailDomain.indexOf(str);
+
+                if (needle > -1) {
+                    console.log(i, str, emailDomain);
+
+                    if (
+                        str.length === emailDomain.length ||
+                        str.length + needle === emailDomain.length
+                    ) {
+                        //ok
+                        console.log("yes");
+                        setUniversity(eduData[i].Name);
+                    } else {
+                        //ручная проверка
+                        console.log("no");
+                    }
+                    setChecked(true);
+
+                    return;
+                }
+            }
+        }
+
+        setChecked(true);
     };
 
     // Handle Password
@@ -167,6 +216,8 @@ const StepperSignUp = () => {
                             label="Your institutional email"
                             sx={{ mb: 4 }}
                             placeholder="example@uni.edu"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <Box mt={4}>
                             <Button
@@ -186,49 +237,111 @@ const StepperSignUp = () => {
                 return (
                     <Fragment key={step}>
                         <Grid item xs={12}>
-                            <Box sx={{ textAlign: "center" }}>
-                                <Box
-                                    sx={{
-                                        width: 50,
-                                        height: 50,
-                                        backgroundColor:
-                                            "rgba(51, 115, 139, 1)",
-                                        display: "inline-flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        outline:
-                                            "6px solid rgba(110, 116, 31, 0.1)",
-                                        borderRadius: 16,
-                                    }}
-                                    mb={5}
-                                >
-                                    <DraftsOutlinedIcon
-                                        sx={{
-                                            fontSize: "26px",
-                                            color: "white",
-                                        }}
-                                    />
-                                </Box>
-                                <Box>
-                                    <Typography variant="h5">
-                                        Check your email
-                                        <br />
-                                        for a verification link
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Box mt={4}>
-                                <Button
-                                    sx={{ height: "56px" }}
-                                    size="large"
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleNext}
-                                >
-                                    test
-                                </Button>
-                            </Box>
-                            <SignUpFooter />
+                            {checked &&
+                                (university !== "" ? (
+                                    <>
+                                        <StepMessage
+                                            color="rgba(184, 193, 52, 1)"
+                                            icon={
+                                                <CelebrationOutlinedIcon
+                                                    sx={{
+                                                        fontSize: "26px",
+                                                        color: "white",
+                                                    }}
+                                                />
+                                            }
+                                        >
+                                            <>
+                                                <Typography variant="h5">
+                                                    Success!
+                                                </Typography>
+                                                <Box mt={2.5} mb={4}>
+                                                    <Typography variant="caption">
+                                                        Your institutional email
+                                                        is verified
+                                                    </Typography>
+                                                </Box>
+                                                <Email>{email}</Email>
+                                                <Box mt={9}>
+                                                    <Button
+                                                        sx={{ height: "56px" }}
+                                                        size="large"
+                                                        fullWidth
+                                                        variant="contained"
+                                                        onClick={handleNext}
+                                                    >
+                                                        Next step
+                                                    </Button>
+                                                </Box>
+                                            </>
+                                        </StepMessage>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Box sx={{ textAlign: "center" }}>
+                                            <Typography variant="h5">
+                                                We're still working on
+                                                <br />
+                                                verifying your email
+                                            </Typography>
+                                            <Box mt={2.5}>
+                                                <Typography variant="caption">
+                                                    Currently, only
+                                                    institutionally affiliated
+                                                    researchers can create a
+                                                    Besample account.
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                        <Box mt={9}>
+                                            <Button
+                                                sx={{ height: "56px" }}
+                                                size="large"
+                                                fullWidth
+                                                variant="contained"
+                                                onClick={() => {
+                                                    handleBack();
+                                                    setChecked(false);
+                                                }}
+                                            >
+                                                Try another email
+                                            </Button>
+                                        </Box>
+                                    </>
+                                ))}
+                            {!checked && (
+                                <>
+                                    <StepMessage
+                                        color="rgba(51, 115, 139, 1)"
+                                        icon={
+                                            <DraftsOutlinedIcon
+                                                sx={{
+                                                    fontSize: "26px",
+                                                    color: "white",
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        <Typography variant="h5">
+                                            Check your email
+                                            <br />
+                                            for a verification link
+                                        </Typography>
+                                    </StepMessage>
+                                    <Box mt={4}>
+                                        <Button
+                                            sx={{ height: "56px" }}
+                                            size="large"
+                                            fullWidth
+                                            variant="contained"
+                                            onClick={checkEmail}
+                                        >
+                                            check email //mock
+                                        </Button>
+                                    </Box>
+                                    <SignUpFooter />
+                                </>
+                            )}
                         </Grid>
                     </Fragment>
                 );
@@ -241,7 +354,7 @@ const StepperSignUp = () => {
                                     Create a password
                                 </Typography>
                             </Box>
-                            <Email>test@harvard.edu</Email>
+                            <Email>{email}</Email>
                             <FormControl fullWidth>
                                 <OutlinedInput
                                     placeholder="Password"
@@ -416,7 +529,7 @@ const StepperSignUp = () => {
                             </Box>
                             <Holder>
                                 <Typography variant="body2">
-                                    University of South Dakota
+                                    {university}
                                 </Typography>
                             </Holder>
                             <FormControl
