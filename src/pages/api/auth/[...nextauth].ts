@@ -7,7 +7,7 @@ import EmailProvider from "next-auth/providers/email";
 
 //const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 //export default authHandler;
-
+/*
 const options: NextAuthOptions = {
   providers: [
     EmailProvider({
@@ -25,3 +25,4 @@ const options: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.SECRET,
 };
+*/
