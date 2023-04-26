@@ -1,98 +1,111 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, ChangeEvent } from "react";
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Step from '@mui/material/Step'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Stepper from '@mui/material/Stepper'
-import StepLabel from '@mui/material/StepLabel'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import Stack from '@mui/material/Stack'
-import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined'
-import InfoIcon from '@mui/icons-material/Info'
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Step from "@mui/material/Step";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Stepper from "@mui/material/Stepper";
+import StepLabel from "@mui/material/StepLabel";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
+import InfoIcon from "@mui/icons-material/Info";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ** Icon Imports
 
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot'
+import StepperCustomDot from "./StepperCustomDot";
 
 // ** Third Party Imports
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 // ** Styled Component
-import StepperWrapper from 'src/@core/styles/mui/stepper'
-import SignUpFooter from '../SignUpFooter'
-import { FormControl, OutlinedInput, InputAdornment, IconButton } from '@mui/material'
-import Icon from 'src/@core/components/icon'
+import StepperWrapper from "src/@core/styles/mui/stepper";
+import SignUpFooter from "../SignUpFooter";
+import {
+    FormControl,
+    OutlinedInput,
+    InputAdornment,
+    IconButton,
+} from "@mui/material";
+import Icon from "src/@core/components/icon";
+import Email from "./Email";
+import Holder from "./Holder";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
 
 interface State {
-    password: string
-    password2: string
-    showPassword: boolean
-    showPassword2: boolean
+    password: string;
+    password2: string;
+    showPassword: boolean;
+    showPassword2: boolean;
 }
 
 const steps = [
     {
-        title: 'Account Setup',
-        subtitle: ''
+        title: "Account Setup",
+        subtitle: "",
     },
     {
-        title: 'Verification',
-        subtitle: ''
+        title: "Verification",
+        subtitle: "",
     },
     {
-        title: 'Create password',
-        subtitle: ''
+        title: "Create password",
+        subtitle: "",
     },
     {
-        title: 'About you',
-        subtitle: ''
+        title: "About you",
+        subtitle: "",
     },
     {
-        title: 'Affilation',
-        subtitle: ''
-    }
-]
+        title: "Affilation",
+        subtitle: "",
+    },
+];
 
 //styles
 const StepperSx = {
-    maxWidth: '560px',
-    '& .MuiStepConnector-root': {
-        top: '4px !important',
-        left: '-50%',
-        right: 'calc(50% - 1px)'
+    maxWidth: "560px",
+    "& .MuiStepConnector-root": {
+        top: "4px !important",
+        left: "-50%",
+        right: "calc(50% - 1px)",
     },
-    '& .MuiStepConnector-line': {
-        marginTop: '22px',
-        zIndex: '-1'
+    "& .MuiStepConnector-line": {
+        marginTop: "22px",
+        zIndex: "-1",
     },
-    '& .MuiStepConnector-root.Mui-disabled .MuiStepConnector-line': {
-        borderColor: '#AEBABF',
-        position: 'relative',
-        zIndex: '-1'
-    }
-}
+    "& .MuiStepConnector-root.Mui-disabled .MuiStepConnector-line": {
+        borderColor: "#AEBABF",
+        position: "relative",
+        zIndex: "-1",
+    },
+};
 
 const StepperSignUp = () => {
     // ** States
-    const [showPassword1, setShowPassword1] = useState<boolean>(false)
-    const [showPassword2, setShowPassword2] = useState<boolean>(false)
-    const [activeStep, setActiveStep] = useState<number>(0)
+    const [showPassword1, setShowPassword1] = useState<boolean>(false);
+    const [showPassword2, setShowPassword2] = useState<boolean>(false);
+    const [activeStep, setActiveStep] = useState<number>(0);
     const [state, setState] = useState<State>({
-        password: '',
-        password2: '',
+        password: "",
+        password2: "",
         showPassword: false,
-        showPassword2: false
-    })
+        showPassword2: false,
+    });
+    const [affilationVal, setAffilationVal] = useState<string>("yes");
 
     // Handle Stepper
     /*
@@ -100,16 +113,20 @@ const StepperSignUp = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
   */
+    const handleChangeAffilation = (event: ChangeEvent<HTMLInputElement>) => {
+        setAffilationVal((event.target as HTMLInputElement).value);
+    };
+
     const handleNext = () => {
-        setActiveStep(prevActiveStep => prevActiveStep + 1)
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
         if (activeStep === steps.length - 1) {
-            toast.success('Form Submitted')
+            toast.success("Form Submitted");
         }
-    }
+    };
     const handleReset = () => {
-        setActiveStep(0)
-        setState({ ...state, password: '', password2: '' })
-    }
+        setActiveStep(0);
+        setState({ ...state, password: "", password2: "" });
+    };
 
     // Handle Password
 
@@ -122,33 +139,41 @@ const StepperSignUp = () => {
             case 0:
                 return (
                     <Grid item xs={12}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <Typography mb={2.5} variant='h5'>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Typography mb={2.5} variant="h5">
                                 Create account
                             </Typography>
-                            <Box mb={5} sx={{ textAlign: 'center' }} px={6}>
-                                <Typography variant='caption'>
-                                    Currently, only institutionally affiliated researchers
+                            <Box mb={5} sx={{ textAlign: "center" }} px={6}>
+                                <Typography variant="caption">
+                                    Currently, only institutionally affiliated
+                                    researchers
                                     <br />
-                                    can create a Besample account. Please use your
+                                    can create a Besample account. Please use
+                                    your
                                     <br />
                                     institutional email address to sign up
                                 </Typography>
                             </Box>
                         </Box>
                         <TextField
-                            size='medium'
+                            size="medium"
                             fullWidth
-                            label='Your institutional email'
+                            label="Your institutional email"
                             sx={{ mb: 4 }}
-                            placeholder='example@uni.edu'
+                            placeholder="example@uni.edu"
                         />
                         <Box mt={4}>
                             <Button
-                                sx={{ height: '56px' }}
-                                size='large'
+                                sx={{ height: "56px" }}
+                                size="large"
                                 fullWidth
-                                variant='contained'
+                                variant="contained"
                                 onClick={handleNext}
                             >
                                 Verify email
@@ -156,29 +181,36 @@ const StepperSignUp = () => {
                         </Box>
                         <SignUpFooter />
                     </Grid>
-                )
+                );
             case 1:
                 return (
                     <Fragment key={step}>
                         <Grid item xs={12}>
-                            <Box sx={{ textAlign: 'center' }}>
+                            <Box sx={{ textAlign: "center" }}>
                                 <Box
                                     sx={{
                                         width: 50,
                                         height: 50,
-                                        backgroundColor: 'rgba(51, 115, 139, 1)',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        outline: '6px solid rgba(110, 116, 31, 0.1)',
-                                        borderRadius: 16
+                                        backgroundColor:
+                                            "rgba(51, 115, 139, 1)",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        outline:
+                                            "6px solid rgba(110, 116, 31, 0.1)",
+                                        borderRadius: 16,
                                     }}
                                     mb={5}
                                 >
-                                    <DraftsOutlinedIcon sx={{ fontSize: '26px', color: 'white' }} />
+                                    <DraftsOutlinedIcon
+                                        sx={{
+                                            fontSize: "26px",
+                                            color: "white",
+                                        }}
+                                    />
                                 </Box>
                                 <Box>
-                                    <Typography variant='h5'>
+                                    <Typography variant="h5">
                                         Check your email
                                         <br />
                                         for a verification link
@@ -187,10 +219,10 @@ const StepperSignUp = () => {
                             </Box>
                             <Box mt={4}>
                                 <Button
-                                    sx={{ height: '56px' }}
-                                    size='large'
+                                    sx={{ height: "56px" }}
+                                    size="large"
                                     fullWidth
-                                    variant='contained'
+                                    variant="contained"
                                     onClick={handleNext}
                                 >
                                     test
@@ -199,61 +231,41 @@ const StepperSignUp = () => {
                             <SignUpFooter />
                         </Grid>
                     </Fragment>
-                )
+                );
             case 2:
                 return (
                     <Fragment key={step}>
-                        <Grid alignItems={'center'} item xs={12}>
-                            <Box mb={4} sx={{ textAlign: 'center' }}>
-                                <Typography variant='h5'>Create a password</Typography>
+                        <Grid alignItems={"center"} item xs={12}>
+                            <Box mb={4} sx={{ textAlign: "center" }}>
+                                <Typography variant="h5">
+                                    Create a password
+                                </Typography>
                             </Box>
-                            <Box
-                                sx={{
-                                    textAlign: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    padding: '5px 10px 6px 6px',
-                                    gap: '8px',
-                                    background: '#F5F7F7',
-                                    border: '1px solid #E1EAED',
-                                    borderRadius: '50px',
-                                    width: 'fit-content',
-                                    margin: '0 auto',
-                                    marginBottom: '1rem'
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        width: '20px',
-                                        height: '20px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        background: '#2F454D',
-                                        color: 'white',
-                                        borderRadius: '50%'
-                                    }}
-                                >
-                                    E
-                                </Box>
-                                <Typography>email@harvard.edu</Typography>
-                            </Box>
+                            <Email>test@harvard.edu</Email>
                             <FormControl fullWidth>
                                 <OutlinedInput
-                                    placeholder='Password'
-                                    id='auth-login-v2-password-1'
-                                    type={showPassword1 ? 'text' : 'password'}
+                                    placeholder="Password"
+                                    id="auth-login-v2-password-1"
+                                    type={showPassword1 ? "text" : "password"}
                                     endAdornment={
-                                        <InputAdornment position='end'>
+                                        <InputAdornment position="end">
                                             <IconButton
-                                                edge='end'
-                                                onMouseDown={e => e.preventDefault()}
-                                                onClick={() => setShowPassword1(!showPassword1)}
+                                                edge="end"
+                                                onMouseDown={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                                onClick={() =>
+                                                    setShowPassword1(
+                                                        !showPassword1
+                                                    )
+                                                }
                                             >
                                                 <Icon
-                                                    icon={showPassword1 ? 'tabler:eye' : 'tabler:eye-off'}
+                                                    icon={
+                                                        showPassword1
+                                                            ? "tabler:eye"
+                                                            : "tabler:eye-off"
+                                                    }
                                                     fontSize={20}
                                                 />
                                             </IconButton>
@@ -261,27 +273,50 @@ const StepperSignUp = () => {
                                     }
                                 />
                             </FormControl>
-                            <Box mb={3} sx={{ display: 'flex', alignItems: 'flex-start', gap: '5px' }}>
-                                <InfoIcon sx={{ fontSize: 12, marginTop: 0.5 }} />
-                                <Typography sx={{ lineHeight: '140%' }} variant='caption'>
+                            <Box
+                                mb={3}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: "5px",
+                                }}
+                            >
+                                <InfoIcon
+                                    sx={{ fontSize: 12, marginTop: 0.5 }}
+                                />
+                                <Typography
+                                    sx={{ lineHeight: "140%" }}
+                                    variant="caption"
+                                >
                                     Must be at least 8 symbols, must contain
-                                    <br />a letter, a number, and a special character
+                                    <br />a letter, a number, and a special
+                                    character
                                 </Typography>
                             </Box>
                             <FormControl fullWidth>
                                 <OutlinedInput
-                                    id='auth-login-v2-password-2'
-                                    placeholder='Confirm password'
-                                    type={showPassword2 ? 'text' : 'password'}
+                                    id="auth-login-v2-password-2"
+                                    placeholder="Confirm password"
+                                    type={showPassword2 ? "text" : "password"}
                                     endAdornment={
-                                        <InputAdornment position='end'>
+                                        <InputAdornment position="end">
                                             <IconButton
-                                                edge='end'
-                                                onMouseDown={e => e.preventDefault()}
-                                                onClick={() => setShowPassword2(!showPassword2)}
+                                                edge="end"
+                                                onMouseDown={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                                onClick={() =>
+                                                    setShowPassword2(
+                                                        !showPassword2
+                                                    )
+                                                }
                                             >
                                                 <Icon
-                                                    icon={showPassword2 ? 'tabler:eye' : 'tabler:eye-off'}
+                                                    icon={
+                                                        showPassword2
+                                                            ? "tabler:eye"
+                                                            : "tabler:eye-off"
+                                                    }
                                                     fontSize={20}
                                                 />
                                             </IconButton>
@@ -291,10 +326,10 @@ const StepperSignUp = () => {
                             </FormControl>
                             <Box mt={9}>
                                 <Button
-                                    sx={{ height: '56px' }}
-                                    size='large'
+                                    sx={{ height: "56px" }}
+                                    size="large"
                                     fullWidth
-                                    variant='contained'
+                                    variant="contained"
                                     onClick={handleNext}
                                 >
                                     Next step
@@ -303,66 +338,254 @@ const StepperSignUp = () => {
                             <SignUpFooter />
                         </Grid>
                     </Fragment>
-                )
+                );
             case 3:
-                return <Fragment key={step}></Fragment>
+                return (
+                    <Fragment key={step}>
+                        <Grid alignItems={"center"} item xs={12}>
+                            <Box mb={2.5} sx={{ textAlign: "center" }}>
+                                <Typography variant="h5">About you</Typography>
+                            </Box>
+                            <Box mb={5} sx={{ textAlign: "center" }}>
+                                <Typography variant="caption">
+                                    Complete your profile to launch studies
+                                    <br />
+                                    and collaborate with others
+                                </Typography>
+                            </Box>
+                            <Email>test@harvard.edu</Email>
+                            <Box sx={{ display: "flex", gap: "0.25rem" }}>
+                                <FormControl>
+                                    <Select
+                                        defaultValue="No title"
+                                        id="title-select"
+                                    >
+                                        <MenuItem value="">No title</MenuItem>
+                                        <MenuItem value={10}>Mr.</MenuItem>
+                                        <MenuItem value={20}>Ms.</MenuItem>
+                                        <MenuItem value={30}>Mrs.</MenuItem>
+                                        <MenuItem value={40}>Dr.</MenuItem>
+                                        <MenuItem value={50}>Prof.</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <TextField
+                                    size="medium"
+                                    fullWidth
+                                    sx={{ mb: 4 }}
+                                    placeholder="First Name"
+                                />
+                            </Box>
+                            <TextField
+                                size="medium"
+                                fullWidth
+                                sx={{ mb: 4 }}
+                                placeholder="Middle Name"
+                            />
+                            <TextField
+                                size="medium"
+                                fullWidth
+                                sx={{ mb: 4 }}
+                                placeholder="Last Name"
+                            />
+                            <Box mt={4}>
+                                <Button
+                                    sx={{ height: "56px" }}
+                                    size="large"
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={handleNext}
+                                >
+                                    Next step
+                                </Button>
+                            </Box>
+                            <SignUpFooter />
+                        </Grid>
+                    </Fragment>
+                );
             case 4:
-                return <Fragment key={step}></Fragment>
+                return (
+                    <Fragment key={step}>
+                        <Grid alignItems={"center"} item xs={12}>
+                            <Box mb={2.5} sx={{ textAlign: "center" }}>
+                                <Typography variant="h5">Affilation</Typography>
+                            </Box>
+                            <Box mb={2.5} sx={{ textAlign: "center" }}>
+                                <Typography variant="subtitle1">
+                                    Is this your primary affiliation?
+                                </Typography>
+                            </Box>
+                            <Holder>
+                                <Typography variant="body2">
+                                    University of South Dakota
+                                </Typography>
+                            </Holder>
+                            <FormControl
+                                sx={{
+                                    flexWrap: "wrap",
+                                    flexDirection: "row",
+                                    justifyContent: "center",
+                                    width: "100%",
+                                }}
+                            >
+                                <RadioGroup
+                                    row
+                                    value={affilationVal}
+                                    name="affilation-radio"
+                                    onChange={handleChangeAffilation}
+                                    aria-label="simple-radio"
+                                >
+                                    <FormControlLabel
+                                        value="yes"
+                                        control={<Radio />}
+                                        label="Yes"
+                                    />
+                                    <FormControlLabel
+                                        value="no"
+                                        control={<Radio />}
+                                        label="No"
+                                    />
+                                </RadioGroup>
+                                {affilationVal === "no" && (
+                                    <Box>
+                                        <TextField
+                                            size="medium"
+                                            fullWidth
+                                            sx={{ mb: 4 }}
+                                            placeholder="What is your primary affiliation?"
+                                        />
+                                        <FormControl sx={{ width: "100%" }}>
+                                            <Select
+                                                defaultValue="Other"
+                                                placeholder="Position"
+                                                fullWidth
+                                                id="affilation-position-select"
+                                            >
+                                                <MenuItem value=""></MenuItem>
+                                                <MenuItem value={10}>
+                                                    Professor
+                                                </MenuItem>
+                                                <MenuItem value={20}>
+                                                    Associate professor
+                                                </MenuItem>
+                                                <MenuItem value={30}>
+                                                    Assistant professor
+                                                </MenuItem>
+                                                <MenuItem value={40}>
+                                                    Visiting scholar
+                                                </MenuItem>
+                                                <MenuItem value={50}>
+                                                    Post-doc
+                                                </MenuItem>
+                                                <MenuItem value={60}>
+                                                    Graduate Student
+                                                </MenuItem>
+                                                <MenuItem value={70}>
+                                                    Research Assistant
+                                                </MenuItem>
+                                                <MenuItem value={80}>
+                                                    Lab Manager
+                                                </MenuItem>
+                                                <MenuItem value={90}>
+                                                    Undergraduate Student
+                                                </MenuItem>
+                                                <MenuItem value={100}>
+                                                    Other
+                                                </MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                )}
+                            </FormControl>
+                            <Box mt={4}>
+                                <Button
+                                    sx={{ height: "56px" }}
+                                    size="large"
+                                    fullWidth
+                                    variant="contained"
+                                    onClick={handleNext}
+                                >
+                                    Welcome to Besample
+                                </Button>
+                            </Box>
+                            <SignUpFooter />
+                        </Grid>
+                    </Fragment>
+                );
             default:
-                return 'Unknown Step'
+                return "Unknown Step";
         }
-    }
+    };
 
     const renderContent = () => {
         if (activeStep === steps.length) {
             return (
                 <Fragment>
                     <Typography>All steps are completed!</Typography>
-                    <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button size='large' variant='contained' onClick={handleReset}>
+                    <Box
+                        sx={{
+                            mt: 4,
+                            display: "flex",
+                            justifyContent: "flex-end",
+                        }}
+                    >
+                        <Button
+                            size="large"
+                            variant="contained"
+                            onClick={handleReset}
+                        >
                             Reset
                         </Button>
                     </Box>
                 </Fragment>
-            )
+            );
         } else {
             return (
-                <form onSubmit={e => e.preventDefault()}>
+                <form onSubmit={(e) => e.preventDefault()}>
                     <Grid container spacing={5}>
                         {getStepContent(activeStep)}
                     </Grid>
                 </form>
-            )
+            );
         }
-    }
+    };
 
     return (
         <Fragment>
             <StepperWrapper>
-                <Stepper activeStep={activeStep} alternativeLabel sx={StepperSx}>
+                <Stepper
+                    activeStep={activeStep}
+                    alternativeLabel
+                    sx={StepperSx}
+                >
                     {steps.map((step, index) => {
                         return (
                             <Step key={index}>
-                                <div className='step-label'>
+                                <div className="step-label">
                                     <div>
-                                        <Typography variant='caption'>{step.title}</Typography>
+                                        <Typography variant="caption">
+                                            {step.title}
+                                        </Typography>
                                     </div>
                                 </div>
-                                <StepLabel StepIconComponent={StepperCustomDot}></StepLabel>
+                                <StepLabel
+                                    StepIconComponent={StepperCustomDot}
+                                ></StepLabel>
                             </Step>
-                        )
+                        );
                     })}
                 </Stepper>
             </StepperWrapper>
             <Box>
-                <Stack mt={14} alignItems='center'>
+                <Stack mt={14} alignItems="center">
                     <Card sx={{ width: 420 }}>
-                        <CardContent sx={{ padding: 9 }}>{renderContent()}</CardContent>
+                        <CardContent sx={{ padding: 9 }}>
+                            {renderContent()}
+                        </CardContent>
                     </Card>
                 </Stack>
             </Box>
         </Fragment>
-    )
-}
+    );
+};
 
-export default StepperSignUp
+export default StepperSignUp;
