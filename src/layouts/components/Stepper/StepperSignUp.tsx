@@ -466,7 +466,7 @@ const StepperSignUp = (props: any) => {
                                     and collaborate with others
                                 </Typography>
                             </Box>
-                            <Email>test@harvard.edu</Email>
+                            <Email>{email}</Email>
                             <Box sx={{ display: "flex", gap: "0.25rem" }}>
                                 <FormControl>
                                     <Select
