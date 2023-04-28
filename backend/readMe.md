@@ -1,29 +1,23 @@
-# Node.js + Prisma + PostgreSQL: Access & Refresh Tokens
+# API with Node.js, Prisma & PostgreSQL: Forget/Reset Password
 
-In this comprehensive article, you'll learn how to set up a Node.js API Project with ExpressJs, Prisma, PostgreSQL, Redis, and Docker-compose. The API will run on an Express server and use Postgres for data storage.
+In this article, you'll learn how to implement forget/reset passwords with Node.js, Prisma, PostgreSQL, Nodemailer, Redis, Docker-compose, and Pug. Also, you will learn how to dynamically generate HTML Email templates with Pug and send them via SMTP to the user's Email inbox.
 
-![Node.js + Prisma + PostgreSQL: Access & Refresh Tokens](https://codevoweb.com/wp-content/uploads/2022/05/Node.js-Prisma-PostgreSQL-Access-Refresh-Tokens.webp)
+![API with Node.js, Prisma & PostgreSQL: Forget/Reset Password](https://codevoweb.com/wp-content/uploads/2022/05/API-with-Node.js-Prisma-PostgreSQL-Forget-Reset-Password.webp)
 
 ## Topics Covered
 
-- JWT Authentication Example with Node.js, Prisma, and PostgreSQL
-- User Login and Registration Flow with JSON Web Tokens
-- Create the User Model with Prisma
-- Create Validation Schemas with Zod
-- Create Middleware to Parse Zod Schema
-- Password Management with Bcryptjs
-- Create Services to Interact with the Database
-- Authentication with JSON Web Tokens (JWT)
-- Create Authentication Controllers
-- Create User Controller
-- Create Authentication Middleware
-- Create Authentication Routes
-- Create User Routes
-- Add the Routes to the Middleware Stack
-- Database Migration with Prisma
-- Testing the JSON Web Token Authentication REST API
+- Forget/Reset Password Flow in Node.js
+- Update the Prisma User Model
+- Run the Prisma Migration Command to Update the Database
+- Update the Zod User Schema
+- Create Services to Query and Mutate the Database
+- Create a Utility Class to Send Emails
+- Create Controllers
+    - Forgot Password Controller
+    - Create the Password Reset Controller
+- Add the Routes to the Middleware Pipeline
 
-Read the entire article here: [https://codevoweb.com/node-prisma-postgresql-access-refresh-tokens](https://codevoweb.com/node-prisma-postgresql-access-refresh-tokens)
+Read the entire article here: [https://codevoweb.com/crud-api-node-prisma-postgresql-reset-password](https://codevoweb.com/crud-api-node-prisma-postgresql-reset-password)
 
 Articles in this series:
 
