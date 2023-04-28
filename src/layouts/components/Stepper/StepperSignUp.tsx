@@ -43,6 +43,8 @@ import Icon from "src/@core/components/icon";
 import Email from "./Email";
 import Holder from "./Holder";
 import StepMessage from "./StepMessage";
+import { useDispatch } from "react-redux";
+import { regUser } from "src/store/apps/user";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
@@ -112,6 +114,8 @@ const StepperSignUp = (props: any) => {
     });
     const [affilationVal, setAffilationVal] = useState<string>("yes");
 
+    const dispatch = useDispatch();
+
     const eduData = props.universities;
 
     //console.log('test data', data);
@@ -127,6 +131,10 @@ const StepperSignUp = (props: any) => {
     };
 
     const handleNext = () => {
+        if (activeStep === 0) {
+            // @ts-ignore
+            dispatch(regUser({ email: email }));
+        }
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         if (activeStep === steps.length - 1) {
             toast.success("Form Submitted");
