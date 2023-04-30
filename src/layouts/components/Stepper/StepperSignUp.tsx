@@ -1,5 +1,5 @@
 // ** React Imports
-import React, { Fragment, useState, ChangeEvent } from "react";
+import React, { Fragment, useState, ChangeEvent, useEffect } from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -45,6 +45,8 @@ import Holder from "./Holder";
 import StepMessage from "./StepMessage";
 import { useDispatch } from "react-redux";
 import { regUser } from "src/store/apps/user";
+import { useSelector } from "react-redux";
+import { RootState } from "src/store";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
@@ -100,12 +102,21 @@ const StepperSx = {
 
 const StepperSignUp = (props: any) => {
     // ** States
-    const [email, setEmail] = useState<string>("");
+    const dispatch = useDispatch();
+    const verifyStep = useSelector((state: RootState) => state.user.step);
+    const verifyPayload = useSelector((state: RootState) => state.user.verify);
+
+    const [email, setEmail] = useState<string>(
+        // @ts-ignore
+        verifyPayload?.email !== undefined ? verifyPayload.email : ""
+    );
     const [checked, setChecked] = useState<boolean>(false);
     const [university, setUniversity] = useState<string>("");
     const [showPassword1, setShowPassword1] = useState<boolean>(false);
     const [showPassword2, setShowPassword2] = useState<boolean>(false);
-    const [activeStep, setActiveStep] = useState<number>(0);
+    const [activeStep, setActiveStep] = useState<number>(
+        verifyStep === 1 ? 1 : 0
+    );
     const [state, setState] = useState<State>({
         password: "",
         password2: "",
@@ -114,11 +125,16 @@ const StepperSignUp = (props: any) => {
     });
     const [affilationVal, setAffilationVal] = useState<string>("yes");
 
-    const dispatch = useDispatch();
-
     const eduData = props.universities;
 
     //console.log('test data', data);
+
+    useEffect(() => {
+        if (verifyStep == 1)
+            if (!checked && activeStep === 1) {
+                checkEmail();
+            }
+    }, [checked, activeStep, verifyStep]);
 
     // Handle Stepper
 
@@ -336,17 +352,6 @@ const StepperSignUp = (props: any) => {
                                             for a verification link
                                         </Typography>
                                     </StepMessage>
-                                    <Box mt={4}>
-                                        <Button
-                                            sx={{ height: "56px" }}
-                                            size="large"
-                                            fullWidth
-                                            variant="contained"
-                                            onClick={checkEmail}
-                                        >
-                                            check email //mock
-                                        </Button>
-                                    </Box>
                                     <SignUpFooter />
                                 </>
                             )}

@@ -82,7 +82,7 @@ export const registerUserHandler = async (
                     "An email with a verification code has been sent to your email",
             });
         } catch (error) {
-            console.log(error.message);
+            //console.log(error.message);
             await updateUser({ id: user.id }, { verificationCode: null });
             return res.status(500).json({
                 status: "error",
@@ -263,7 +263,12 @@ export const verifyEmailHandler = async (
         res.status(200).json({
             status: "success",
             message: "Email verified successfully",
+            email: user.email,
         });
+
+        /* Здесь должна быть проверка почты пользователя user.email */
+        //code
+        /* */
     } catch (err: any) {
         if (err.code === "P2025") {
             return res.status(403).json({

@@ -2,12 +2,12 @@
 import { ReactNode, useEffect, useState } from "react";
 
 // ** Next Import
-//import Link from 'next/link'
-import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 // ** MUI Components
 import Box from "@mui/material/Box";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 
 // ** Layout Import
 import BlankLayout from "src/@core/layouts/BlankLayout";
@@ -15,7 +15,7 @@ import RegisterLayout from "src/layouts/RegisterLayout";
 import { verifyEmail } from "src/store/apps/user";
 
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "src/store";
+import { RootState } from "src/store";
 
 const Verify = () => {
     const [lock, setLock] = useState<boolean>(false);
@@ -26,8 +26,6 @@ const Verify = () => {
     const { code } = router.query;
 
     useEffect(() => {
-        console.log(typeof code);
-        if (code === undefined || code === "undefined") console.log("yes");
         if (!lock) {
             if (code !== undefined && code !== "undefined") {
                 // @ts-ignore
@@ -41,7 +39,50 @@ const Verify = () => {
         return <>code is null</>;
     }
 
-    return <>{verify.toString()}</>;
+    // @ts-ignore
+    //return <>{verify?.message}</>;
+
+    return (
+        <Card>
+            <CardContent>
+                <Grid item xs={12}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Typography mb={2.5} variant="h5">
+                            Email verify
+                        </Typography>
+                        <Typography mb={2.5} variant="body1">
+                            message: "
+                            {
+                                // @ts-ignore
+                                verify?.message
+                            }
+                            "
+                        </Typography>
+                        <Typography mb={2.5} variant="body1">
+                            status: "
+                            {
+                                // @ts-ignore
+                                verify?.status
+                            }
+                            "
+                        </Typography>
+                        {
+                            // @ts-ignore
+                            verify?.status === "success" && (
+                                <Link href="/register">Next step</Link>
+                            )
+                        }
+                    </Box>
+                </Grid>
+            </CardContent>
+        </Card>
+    );
 };
 
 Verify.getLayout = (page: ReactNode) => (

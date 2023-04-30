@@ -13,6 +13,7 @@ model User {
   email            String        @unique
   photo            String?       @default("default.png")
   verified         Boolean?      @default(false)
+  active           Boolean?      @default(false)
   password         String
   role             RoleEnumType? @default(user)
   verificationCode String?       @unique

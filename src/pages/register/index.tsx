@@ -35,8 +35,6 @@ Register.guestGuard = true;
 export async function getStaticProps() {
     const prisma = new PrismaClient();
 
-    //const someData = await prisma.$queryRawUnsafe('SELECT * FROM Universities WHERE Domains = "acu.edu";');
-
     const someData = await prisma.universities.findMany();
 
     return {
