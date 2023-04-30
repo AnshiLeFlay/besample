@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // ** Axios Imports
 import axios from "axios";
 
-import { API_REG } from "src/utils/endpoints";
+import { API_EMAIL_VERIFY, API_REG } from "src/utils/endpoints";
 
 interface DataParams {
     q: string;
@@ -60,6 +60,7 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
+/* Custom */
 // Reg user
 export const regUser = createAsyncThunk(
     "appUsers/regUser",
@@ -91,6 +92,24 @@ export const regUser = createAsyncThunk(
     }
 );
 
+//Verify email
+export const verifyEmail = createAsyncThunk(
+    "appUsers/verifyEmail",
+    async (data: any) => {
+        const { code } = data;
+        try {
+            const response = await axios.get(`${API_EMAIL_VERIFY}/${code}`);
+
+            console.log("res", response.data);
+
+            return response.data;
+        } catch (error: any) {
+            console.log("error", error.message);
+            return error.message;
+        }
+    }
+);
+
 export const appUsersSlice = createSlice({
     name: "appUsers",
     initialState: {
@@ -99,6 +118,8 @@ export const appUsersSlice = createSlice({
         params: {},
         allData: [],
         status: {},
+        verify: {},
+        step: 0,
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -111,6 +132,10 @@ export const appUsersSlice = createSlice({
             })
             .addCase(regUser.fulfilled, (state, action) => {
                 state.status = action.payload;
+            })
+            .addCase(verifyEmail.fulfilled, (state, action) => {
+                state.step = 1;
+                state.verify = action.payload;
             });
     },
 });

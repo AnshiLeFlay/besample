@@ -6,3 +6,5 @@ export const API_USER: string = `${BACKEND_ENDPOINT}/api/users/me`; //GET
 export const API_LOGIN: string = `${BACKEND_ENDPOINT}/api/auth/login`; //POST
 export const API_REFRESH: string = `${BACKEND_ENDPOINT}/api/auth/refresh`; //GET
 export const API_LOGOUT: string = `${BACKEND_ENDPOINT}/api/auth/logout`; //GET
+
+export const API_EMAIL_VERIFY: string = `${BACKEND_ENDPOINT}/api/auth/verifyemail`; //GET
