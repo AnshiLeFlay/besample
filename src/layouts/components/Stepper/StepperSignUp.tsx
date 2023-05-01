@@ -1,5 +1,11 @@
 // ** React Imports
-import React, { Fragment, useState, ChangeEvent, useEffect } from "react";
+import React, {
+    Fragment,
+    useState,
+    ChangeEvent,
+    useEffect,
+    useRef,
+} from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -114,6 +120,9 @@ const StepperSignUp = (props: any) => {
     const [university, setUniversity] = useState<string>("");
     const [showPassword1, setShowPassword1] = useState<boolean>(false);
     const [showPassword2, setShowPassword2] = useState<boolean>(false);
+    const [lockPasswords, setLockPasswords] = useState<boolean>(false);
+    const ref1 = useRef(null);
+    const ref2 = useRef(null);
     const [activeStep, setActiveStep] = useState<number>(
         verifyStep === 1 ? 1 : 0
     );
@@ -126,8 +135,6 @@ const StepperSignUp = (props: any) => {
     const [affilationVal, setAffilationVal] = useState<string>("yes");
 
     const eduData = props.universities;
-
-    //console.log('test data', data);
 
     useEffect(() => {
         if (verifyStep == 1)
@@ -204,6 +211,14 @@ const StepperSignUp = (props: any) => {
     // Handle Password
 
     // Handle Confirm Password
+    const handlePasswordEqualCheck = () => {
+        if (
+            ref1?.current?.children[0]?.value ===
+            ref2?.current?.children[0]?.value
+        )
+            console.log("equals");
+        else console.log("not equals");
+    };
 
     // Handle Language
 
@@ -372,7 +387,9 @@ const StepperSignUp = (props: any) => {
                                 <OutlinedInput
                                     placeholder="Password"
                                     id="auth-login-v2-password-1"
+                                    ref={ref1}
                                     type={showPassword1 ? "text" : "password"}
+                                    onChange={handlePasswordEqualCheck}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
@@ -422,8 +439,10 @@ const StepperSignUp = (props: any) => {
                             <FormControl fullWidth>
                                 <OutlinedInput
                                     id="auth-login-v2-password-2"
+                                    ref={ref2}
                                     placeholder="Confirm password"
                                     type={showPassword2 ? "text" : "password"}
+                                    onChange={handlePasswordEqualCheck}
                                     endAdornment={
                                         <InputAdornment position="end">
                                             <IconButton
