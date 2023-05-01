@@ -250,9 +250,20 @@ export const verifyEmailHandler = async (
             .update(req.params.verificationCode)
             .digest("hex");
 
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        const passwordResetToken = crypto
+            .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+
         const user = await updateUser(
             { verificationCode },
-            { verified: true, verificationCode: null },
+            {
+                verified: true,
+                verificationCode: null,
+                passwordResetToken,
+                passwordResetAt: new Date(Date.now() + 10 * 60 * 1000),
+            },
             { email: true }
         );
 
@@ -260,11 +271,60 @@ export const verifyEmailHandler = async (
             return next(new AppError(401, "Could not verify email"));
         }
 
+        /* При верификации выдаем токен на сброс пароля */
+        //try {
+        // Get the user from the collection
+        //const user = await findUser({ email: req.body.email.toLowerCase() });
+
+        console.log("user ID", user.id);
+
+        /*
+        await updateUser(
+            { id: user.id },
+            {
+                passwordResetToken,
+                passwordResetAt: new Date(Date.now() + 10 * 60 * 1000),
+            },
+            { email: true }
+        );
+        */
+
+        //try {
+        /*const url = `${config.get<string>(
+                        "origin"
+                    )}/resetpassword/${resetToken}`;*/
+        //await new Email(user, url).sendPasswordResetToken();
+        /*
+                    res.status(200).json({
+                        status: "success",
+                        message,
+                    });
+                    */
+
         res.status(200).json({
             status: "success",
             message: "Email verified successfully",
             email: user.email,
+            reset: resetToken,
         });
+        /*} catch (err: any) {
+            console.log("err reset", err.message);
+            await updateUser(
+                { id: user.id },
+                { passwordResetToken: null, passwordResetAt: null },
+                {}
+            );
+            return res.status(500).json({
+                status: "error",
+                message: "There was an error to create reset token",
+            });
+        }*/
+        /*} catch (err: any) {
+            console.log("err", err.message);
+            next(err);
+        }*/
+
+        /*  */
 
         /* Здесь должна быть проверка почты пользователя user.email */
         //code

@@ -19,9 +19,11 @@ model User {
   verificationCode String?       @unique
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
+  passwordResetToken String?
+  passwordResetAt DateTime?
 
-  @@unique([email, verificationCode])
-  @@index([email, verificationCode])
+  @@unique([email, verificationCode, passwordResetToken])
+  @@index([email, verificationCode, passwordResetToken])
   @@map("users")
 }
 
