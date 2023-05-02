@@ -8,3 +8,6 @@ export const API_REFRESH: string = `${BACKEND_ENDPOINT}/api/auth/refresh`; //GET
 export const API_LOGOUT: string = `${BACKEND_ENDPOINT}/api/auth/logout`; //GET
 
 export const API_EMAIL_VERIFY: string = `${BACKEND_ENDPOINT}/api/auth/verifyemail`; //GET
+
+export const API_FORGOT_PASS: string = `${BACKEND_ENDPOINT}/api/auth/forgotpassword`; //POST
+export const API_RESET_PASS: string = `${BACKEND_ENDPOINT}/api/auth/resetpassword`; //PATCH

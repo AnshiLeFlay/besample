@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // ** Axios Imports
 import axios from "axios";
 
-import { API_EMAIL_VERIFY, API_REG } from "src/utils/endpoints";
+import { API_EMAIL_VERIFY, API_REG, API_RESET_PASS } from "src/utils/endpoints";
 
 interface DataParams {
     q: string;
@@ -100,7 +100,35 @@ export const verifyEmail = createAsyncThunk(
         try {
             const response = await axios.get(`${API_EMAIL_VERIFY}/${code}`);
 
-            console.log("res", response.data);
+            return response.data;
+        } catch (error: any) {
+            console.log("error", error.message);
+            return error.message;
+        }
+    }
+);
+
+//saveRegistration
+export const saveReg = createAsyncThunk(
+    "appUsers/saveReg",
+    async (data: any) => {
+        const { resetCode, password, userData } = data;
+
+        try {
+            //const response = await axios.get(`${API_EMAIL_VERIFY}/${code}`);
+            const response = await axios.patch(
+                `${API_RESET_PASS}/${resetCode}`,
+                {
+                    password: password,
+                    passwordConfirm: password,
+                    data: userData,
+                },
+                {
+                    headers: {
+                        "content-type": "application/json",
+                    },
+                }
+            );
 
             return response.data;
         } catch (error: any) {

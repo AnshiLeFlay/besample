@@ -276,7 +276,7 @@ export const verifyEmailHandler = async (
         // Get the user from the collection
         //const user = await findUser({ email: req.body.email.toLowerCase() });
 
-        console.log("user ID", user.id);
+        //console.log("user ID", user.id);
 
         /*
         await updateUser(
@@ -449,17 +449,36 @@ export const resetPasswordHandler = async (
 
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
         // Change password data
-        await updateUser(
-            {
-                id: user.id,
-            },
-            {
-                password: hashedPassword,
-                passwordResetToken: null,
-                passwordResetAt: null,
-            },
-            { email: true }
-        );
+        /* if we have some data from req.body.data -> update userName */
+
+        if (req.body.data.name !== undefined) {
+            await updateUser(
+                {
+                    id: user.id,
+                },
+                {
+                    password: hashedPassword,
+                    passwordResetToken: null,
+                    passwordResetAt: null,
+                    name: req.body.data.name,
+                    /* check email & activate */
+                    active: true,
+                },
+                { email: true }
+            );
+        } else {
+            await updateUser(
+                {
+                    id: user.id,
+                },
+                {
+                    password: hashedPassword,
+                    passwordResetToken: null,
+                    passwordResetAt: null,
+                },
+                { email: true }
+            );
+        }
 
         logout(res);
         res.status(200).json({
