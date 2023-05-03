@@ -51,6 +51,35 @@ export const registerUserHandler = async (
     next: NextFunction
 ) => {
     try {
+        //если пароль пустой, то генерируем случайный
+
+        //проверить существует ли пользователь с такой почтой
+
+        /*
+        //если нет, то
+            //добавить пользователя в бд academic = null, verified = false, active = false, academic_type = null
+            //проверить домен
+            //топ домен в university domain list ?
+                //если нет, то проверить .edu or .ac or whitelist
+                    //если проходит проверку, то set academic_type = edu | ac | whitelist
+                    //если нет, то academic_type = manual
+                //если да, то academic = true, academic_type = university_domain, affilation = university.id
+                //регистрируем пользователя
+                //если academic_type === manual, то отправляем письмо we couldn't find
+                //если нет, то обычное письмо с верификацией
+
+        //если сущесвует, то
+            //active = true ? 
+            //если да, то редирект на sign in page с заполненным адресом
+            //если нет, то проверяем verified = true, 
+                //если нет, то редирект на страницу check your email + повторно отсылаем почту с верификацией
+                //если да, то проверяем academic = true
+                    //если да, то редирект на создание пароля
+                    //если нет, то проверяем academic_type = manual 
+                        //если да, то редирект we still working
+                        //если нет, то отправляем лог админу и редиректим на страницу we still working
+        */
+
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
 
         const verifyCode = crypto.randomBytes(32).toString("hex");
