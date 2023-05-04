@@ -32,6 +32,7 @@ Register.getLayout = (page: ReactNode) => (
 
 Register.guestGuard = true;
 
+//удалить
 export async function getStaticProps() {
     const prisma = new PrismaClient();
 

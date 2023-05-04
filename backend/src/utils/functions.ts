@@ -12,7 +12,14 @@ export const generateRandomPassword = (length: number) => {
     return password;
 };
 
-export const domainCheck = async (email: string) => {
+export const domainCheck = async (
+    email: string
+): Promise<{
+    type: string;
+    error?: string;
+    id?: number;
+    name?: string | null;
+}> => {
     try {
         const [, domain] = email.split("@");
         const emailDomain = domain.split(".");
@@ -21,7 +28,8 @@ export const domainCheck = async (email: string) => {
 
         const univerDB = await prisma.universities.findMany();
 
-        if (domain === undefined) return;
+        if (domain === undefined)
+            return { error: "email format is invalid", type: "error" };
 
         for (let i = 0; i < univerDB.length; i++) {
             if (univerDB[i].Domains !== null) {
@@ -52,7 +60,8 @@ export const domainCheck = async (email: string) => {
 
         //проверяем whitelist
 
-        return null;
+        //если ни одна проверка не прошла ставим тип manual
+        return { type: "manual" };
     } catch (err: any) {
         return { error: err.message, type: "error" };
     }

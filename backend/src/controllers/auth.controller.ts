@@ -15,13 +15,13 @@ import {
     signTokens,
     updateUser,
 } from "../services/user.service";
-import { Prisma } from "@prisma/client";
+import { AcademicEnumType, Prisma } from "@prisma/client";
 import config from "config";
 import AppError from "../utils/appError";
 import redisClient from "../utils/connectRedis";
 import { signJwt, verifyJwt } from "../utils/jwt";
 import Email from "../utils/email";
-import { generateRandomPassword } from "../utils/functions";
+import { domainCheck, generateRandomPassword } from "../utils/functions";
 
 const cookiesOptions: CookieOptions = {
     httpOnly: true,
@@ -58,6 +58,13 @@ export const registerUserHandlerTest = async (
             12
         );
 
+        //код верификации почты
+        const verifyCode = crypto.randomBytes(32).toString("hex");
+        const verificationCode = crypto
+            .createHash("sha256")
+            .update(verifyCode)
+            .digest("hex");
+
         //проверить существует ли пользователь с такой почтой
         const userCheck = await findUser({
             email: req.body.email.toLowerCase(),
@@ -66,25 +73,90 @@ export const registerUserHandlerTest = async (
         if (userCheck) {
             //если нашли
         } else {
-            //если пользователя не сущесвует
+            //если пользователя не существует
 
             //если нет, то
             //добавить пользователя в бд academic = null, verified = false, active = false, academic_type = null
 
-            const verifyCode = crypto.randomBytes(32).toString("hex");
-            const verificationCode = crypto
-                .createHash("sha256")
-                .update(verifyCode)
-                .digest("hex");
+            let active = false;
+            let academic: boolean | null = null;
+            let academic_type: AcademicEnumType = "none";
+            let affilation: number | null | undefined = null;
+
+            //проверить домен
+            const check = await domainCheck(req.body.email);
+
+            switch (check.type) {
+                case "university_domain":
+                    affilation = check.id;
+                    academic = true;
+                    academic_type = check.type;
+                    break;
+                case "ac":
+                case "edu":
+                case "manual":
+                    academic_type = check.type;
+                    break;
+                case "error":
+                    break;
+                default:
+                    break;
+            }
 
             const user = await createUser({
                 name: req.body.name,
                 email: req.body.email.toLowerCase(),
                 password: hashedPassword,
                 verificationCode,
+                academic: academic,
+                academic_type: academic_type,
             });
 
-            //проверить домен
+            /* sending email */
+            const redirectUrl = `${config.get<string>(
+                "origin"
+            )}/register/verify/${verifyCode}`;
+            try {
+                if (academic_type === "manual")
+                    await new Email(user, redirectUrl).sendVerificationCode();
+                else
+                    await new Email(
+                        user,
+                        "https://besample.app/version-review/getstarted"
+                    ).sendWaitList();
+
+                await updateUser({ id: user.id }, { verificationCode });
+
+                res.status(201).json({
+                    status: "success",
+                    message: "An verify email has been sent to your email",
+                });
+            } catch (error) {
+                //console.log(error.message);
+                await updateUser({ id: user.id }, { verificationCode: null });
+                return res.status(500).json({
+                    status: "error",
+                    message:
+                        "There was an error sending email, please try again",
+                });
+            }
+            /* end of sending email */
+
+            //if (check.type === 'univer')
+            /*
+            //если нет, то
+                //добавить пользователя в бд academic = null, verified = false, active = false, academic_type = null
+                //проверить домен
+                //топ домен в university domain list ?
+                    //если нет, то проверить .edu or .ac or whitelist
+                        //если проходит проверку, то set academic_type = edu | ac | whitelist
+                        //если нет, то academic_type = manual
+                    //если да, то academic = true, academic_type = university_domain, affilation = university.id
+                    //регистрируем пользователя
+                    //если academic_type === manual, то отправляем письмо we couldn't find
+                    //если нет, то обычное письмо с верификацией
+
+            */
             //топ домен в university domain list ?
             //если нет, то проверить .edu or .ac or whitelist
             //если проходит проверку, то set academic_type = edu | ac | whitelist
@@ -135,6 +207,8 @@ export const registerUserHandler = async (
                 //если academic_type === manual, то отправляем письмо we couldn't find
                 //если нет, то обычное письмо с верификацией
 
+        */
+        /*
         //если сущесвует, то
             //active = true ? 
             //если да, то редирект на sign in page с заполненным адресом
@@ -465,6 +539,7 @@ export const forgotPasswordHandler = async (
             });
         }
 
+        // @ts-ignore
         if (user.provider) {
             return res.status(403).json({
                 status: "fail",
@@ -533,6 +608,7 @@ export const resetPasswordHandler = async (
         const user = await findUser({
             passwordResetToken,
             passwordResetAt: {
+                // @ts-ignore
                 gt: new Date(),
             },
         });

@@ -203,6 +203,7 @@ const StepperSignUp = (props: any) => {
         //setState({ ...state, password: "", password2: "" });
     };
 
+    //удалить
     const checkEmail = () => {
         //проверить на правильность email
         //для простоты будем считать что почта валидная
