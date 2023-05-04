@@ -21,6 +21,7 @@ import AppError from "../utils/appError";
 import redisClient from "../utils/connectRedis";
 import { signJwt, verifyJwt } from "../utils/jwt";
 import Email from "../utils/email";
+import { generateRandomPassword } from "../utils/functions";
 
 const cookiesOptions: CookieOptions = {
     httpOnly: true,
@@ -45,15 +46,81 @@ const refreshTokenCookieOptions: CookieOptions = {
     maxAge: config.get<number>("refreshTokenExpiresIn") * 60 * 1000,
 };
 
+export const registerUserHandlerTest = async (
+    req: Request<{}, {}, RegisterUserInput>,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        //генерируем случайный пароль
+        const hashedPassword = await bcrypt.hash(
+            generateRandomPassword(10),
+            12
+        );
+
+        //проверить существует ли пользователь с такой почтой
+        const userCheck = await findUser({
+            email: req.body.email.toLowerCase(),
+        });
+
+        if (userCheck) {
+            //если нашли
+        } else {
+            //если пользователя не сущесвует
+
+            //если нет, то
+            //добавить пользователя в бд academic = null, verified = false, active = false, academic_type = null
+
+            const verifyCode = crypto.randomBytes(32).toString("hex");
+            const verificationCode = crypto
+                .createHash("sha256")
+                .update(verifyCode)
+                .digest("hex");
+
+            const user = await createUser({
+                name: req.body.name,
+                email: req.body.email.toLowerCase(),
+                password: hashedPassword,
+                verificationCode,
+            });
+
+            //проверить домен
+            //топ домен в university domain list ?
+            //если нет, то проверить .edu or .ac or whitelist
+            //если проходит проверку, то set academic_type = edu | ac | whitelist
+            //если нет, то academic_type = manual
+            //если да, то academic = true, academic_type = university_domain, affilation = university.id
+            //регистрируем пользователя
+            //если academic_type === manual, то отправляем письмо we couldn't find
+            //если нет, то обычное письмо с верификацией
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: hashedPassword,
+            userCheck: userCheck,
+        });
+    } catch (err: any) {
+        next(err);
+    }
+};
+
 export const registerUserHandler = async (
     req: Request<{}, {}, RegisterUserInput>,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        //если пароль пустой, то генерируем случайный
+        //генерируем случайный пароль
+        const hashedPassword = await bcrypt.hash(
+            generateRandomPassword(10),
+            12
+        );
 
         //проверить существует ли пользователь с такой почтой
+        const userCheck = await findUser({
+            email: req.body.email.toLowerCase(),
+        });
 
         /*
         //если нет, то
@@ -80,7 +147,7 @@ export const registerUserHandler = async (
                         //если нет, то отправляем лог админу и редиректим на страницу we still working
         */
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 12);
+        //const hashedPassword = await bcrypt.hash(req.body.password, 12);
 
         const verifyCode = crypto.randomBytes(32).toString("hex");
         const verificationCode = crypto
@@ -98,6 +165,7 @@ export const registerUserHandler = async (
         /*const redirectUrl = `${config.get<string>(
       'origin'
     )}/verifyemail/${verifyCode}`;*/
+
         const redirectUrl = `${config.get<string>(
             "origin"
         )}/register/verify/${verifyCode}`;
