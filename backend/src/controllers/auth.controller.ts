@@ -46,7 +46,7 @@ const refreshTokenCookieOptions: CookieOptions = {
     maxAge: config.get<number>("refreshTokenExpiresIn") * 60 * 1000,
 };
 
-export const registerUserHandlerTest = async (
+export const registerUserHandler = async (
     req: Request<{}, {}, RegisterUserInput>,
     res: Response,
     next: NextFunction
@@ -72,6 +72,81 @@ export const registerUserHandlerTest = async (
 
         if (userCheck) {
             //если нашли
+            /*
+            //если существует, то
+                //active = true ? 
+                //если да, то редирект на sign in page с заполненным адресом
+                //если нет, то проверяем verified = true, 
+                    //если нет, то редирект на страницу check your email + повторно отсылаем почту с верификацией
+                    //если да, то проверяем academic = true
+                        //если да, то редирект на создание пароля
+                        //если нет, то проверяем academic_type = manual 
+                            //если да, то редирект we still working
+                            //если нет, то отправляем лог админу и редиректим на страницу we still working
+            */
+
+            if (userCheck.active) {
+                res.status(201).json({
+                    status: "success",
+                    code: "login",
+                    email: userCheck.email,
+                    message: "Email already exist and active.",
+                });
+            } else {
+                if (userCheck.verified) {
+                    if (userCheck.academic) {
+                        //отправить на создание пароля
+                        res.status(201).json({
+                            status: "success",
+                            code: "reset",
+                            message: "Reset password",
+                        });
+                    } else {
+                        if (userCheck.academic_type !== "manual") {
+                            //send log to admin
+                        }
+                        //we still working
+                        res.status(201).json({
+                            status: "success",
+                            code: "manual",
+                            message: "We still working",
+                        });
+                    }
+                } else {
+                    const redirectUrl = `${config.get<string>(
+                        "origin"
+                    )}/register/verify/${verifyCode}`;
+
+                    try {
+                        await new Email(
+                            userCheck,
+                            redirectUrl
+                        ).sendVerificationCode();
+
+                        await updateUser(
+                            { id: userCheck.id },
+                            { verificationCode }
+                        );
+
+                        res.status(201).json({
+                            status: "success",
+                            code: "verifyEmail",
+                            message:
+                                "An registration email (retry) has been sent to your email",
+                        });
+                    } catch (error) {
+                        await updateUser(
+                            { id: userCheck.id },
+                            { verificationCode: null }
+                        );
+                        return res.status(500).json({
+                            status: "error",
+                            message:
+                                "There was an error sending email (retry), please try again",
+                        });
+                    }
+                }
+            }
         } else {
             //если пользователя не существует
 
@@ -98,6 +173,7 @@ export const registerUserHandlerTest = async (
                     academic_type = check.type;
                     break;
                 case "error":
+                    academic_type = "manual";
                     break;
                 default:
                     break;
@@ -108,6 +184,7 @@ export const registerUserHandlerTest = async (
                 email: req.body.email.toLowerCase(),
                 password: hashedPassword,
                 verificationCode,
+                active: active,
                 academic: academic,
                 academic_type: academic_type,
             });
@@ -129,7 +206,8 @@ export const registerUserHandlerTest = async (
 
                 res.status(201).json({
                     status: "success",
-                    message: "An verify email has been sent to your email",
+                    message:
+                        "An registration email has been sent to your email",
                 });
             } catch (error) {
                 //console.log(error.message);
@@ -141,43 +219,14 @@ export const registerUserHandlerTest = async (
                 });
             }
             /* end of sending email */
-
-            //if (check.type === 'univer')
-            /*
-            //если нет, то
-                //добавить пользователя в бд academic = null, verified = false, active = false, academic_type = null
-                //проверить домен
-                //топ домен в university domain list ?
-                    //если нет, то проверить .edu or .ac or whitelist
-                        //если проходит проверку, то set academic_type = edu | ac | whitelist
-                        //если нет, то academic_type = manual
-                    //если да, то academic = true, academic_type = university_domain, affilation = university.id
-                    //регистрируем пользователя
-                    //если academic_type === manual, то отправляем письмо we couldn't find
-                    //если нет, то обычное письмо с верификацией
-
-            */
-            //топ домен в university domain list ?
-            //если нет, то проверить .edu or .ac or whitelist
-            //если проходит проверку, то set academic_type = edu | ac | whitelist
-            //если нет, то academic_type = manual
-            //если да, то academic = true, academic_type = university_domain, affilation = university.id
-            //регистрируем пользователя
-            //если academic_type === manual, то отправляем письмо we couldn't find
-            //если нет, то обычное письмо с верификацией
         }
-
-        res.status(200).json({
-            status: "success",
-            message: hashedPassword,
-            userCheck: userCheck,
-        });
     } catch (err: any) {
         next(err);
     }
 };
 
-export const registerUserHandler = async (
+//delete this function after tests
+export const registerUserHandlerOld = async (
     req: Request<{}, {}, RegisterUserInput>,
     res: Response,
     next: NextFunction
