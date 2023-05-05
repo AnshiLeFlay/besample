@@ -1,11 +1,5 @@
 // ** React Imports
-import React, {
-    Fragment,
-    useState,
-    ChangeEvent,
-    useEffect,
-    useRef,
-} from "react";
+import React, { Fragment, useState, ChangeEvent, useRef } from "react";
 
 // ** MUI Imports
 import Box from "@mui/material/Box";
@@ -53,16 +47,11 @@ import { useDispatch } from "react-redux";
 import { regUser, saveReg } from "src/store/apps/user";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
+import FirstEmailInput from "./Steps/FirstEmailInput";
+import SecondEmailVerification from "./Steps/SecondEmailVerification";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
-
-interface State {
-    password: string;
-    password2: string;
-    showPassword: boolean;
-    showPassword2: boolean;
-}
 
 const steps = [
     {
@@ -203,153 +192,10 @@ const StepperSignUp = (props: any) => {
     const getStepContent = (step: number) => {
         switch (step) {
             case 0:
-                return (
-                    <Grid item xs={12}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Typography mb={2.5} variant="h5">
-                                Create account
-                            </Typography>
-                            <Box mb={5} sx={{ textAlign: "center" }} px={6}>
-                                <Typography variant="caption">
-                                    Currently, only institutionally affiliated
-                                    researchers
-                                    <br />
-                                    can create a Besample account. Please use
-                                    your
-                                    <br />
-                                    institutional email address to sign up
-                                </Typography>
-                            </Box>
-                        </Box>
-                        <TextField
-                            size="medium"
-                            fullWidth
-                            label="Your institutional email"
-                            sx={{ mb: 4 }}
-                            placeholder="example@uni.edu"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <Box mt={4}>
-                            <Button
-                                sx={{ height: "56px" }}
-                                size="large"
-                                fullWidth
-                                variant="contained"
-                                onClick={handleNext}
-                            >
-                                Verify email
-                            </Button>
-                        </Box>
-                        <SignUpFooter />
-                    </Grid>
-                );
+                return <FirstEmailInput />;
             case 1:
                 return (
-                    <Fragment key={step}>
-                        <Grid item xs={12}>
-                            {checked &&
-                                (university !== "" ? (
-                                    <>
-                                        <StepMessage
-                                            color="rgba(184, 193, 52, 1)"
-                                            icon={
-                                                <CelebrationOutlinedIcon
-                                                    sx={{
-                                                        fontSize: "26px",
-                                                        color: "white",
-                                                    }}
-                                                />
-                                            }
-                                        >
-                                            <>
-                                                <Typography variant="h5">
-                                                    Success!
-                                                </Typography>
-                                                <Box mt={2.5} mb={4}>
-                                                    <Typography variant="caption">
-                                                        Your institutional email
-                                                        is verified
-                                                    </Typography>
-                                                </Box>
-                                                <Email>{email}</Email>
-                                                <Box mt={9}>
-                                                    <Button
-                                                        sx={{ height: "56px" }}
-                                                        size="large"
-                                                        fullWidth
-                                                        variant="contained"
-                                                        onClick={handleNext}
-                                                    >
-                                                        Next step
-                                                    </Button>
-                                                </Box>
-                                            </>
-                                        </StepMessage>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Box sx={{ textAlign: "center" }}>
-                                            <Typography variant="h5">
-                                                We're still working on
-                                                <br />
-                                                verifying your email
-                                            </Typography>
-                                            <Box mt={2.5}>
-                                                <Typography variant="caption">
-                                                    Currently, only
-                                                    institutionally affiliated
-                                                    researchers can create a
-                                                    Besample account.
-                                                </Typography>
-                                            </Box>
-                                        </Box>
-                                        <Box mt={9}>
-                                            <Button
-                                                sx={{ height: "56px" }}
-                                                size="large"
-                                                fullWidth
-                                                variant="contained"
-                                                onClick={() => {
-                                                    handleBack();
-                                                    setChecked(false);
-                                                }}
-                                            >
-                                                Try another email
-                                            </Button>
-                                        </Box>
-                                    </>
-                                ))}
-                            {!checked && (
-                                <>
-                                    <StepMessage
-                                        color="rgba(51, 115, 139, 1)"
-                                        icon={
-                                            <DraftsOutlinedIcon
-                                                sx={{
-                                                    fontSize: "26px",
-                                                    color: "white",
-                                                }}
-                                            />
-                                        }
-                                    >
-                                        <Typography variant="h5">
-                                            Check your email
-                                            <br />
-                                            for a verification link
-                                        </Typography>
-                                    </StepMessage>
-                                    <SignUpFooter />
-                                </>
-                            )}
-                        </Grid>
-                    </Fragment>
+                    <SecondEmailVerification checked={false} academic={false} />
                 );
             case 2:
                 return (

@@ -206,6 +206,7 @@ export const registerUserHandler = async (
 
                 res.status(201).json({
                     status: "success",
+                    code: "regEmail",
                     message:
                         "An registration email has been sent to your email",
                 });
