@@ -82,7 +82,7 @@ export const regUser = createAsyncThunk(
                 }
             );
 
-            console.log("res", response.data);
+            console.log("regUser res", response.data);
 
             return response.data;
         } catch (error: any) {

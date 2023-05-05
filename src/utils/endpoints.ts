@@ -1,6 +1,5 @@
-//const BACKEND_ENDPOINT = "http://localhost:8000";
-//const BACKEND_ENDPOINT = "http://68.183.213.190:80";
-const BACKEND_ENDPOINT = "http://167.99.242.35:8000";
+const BACKEND_ENDPOINT = "http://localhost:8000";
+//const BACKEND_ENDPOINT = "http://167.99.242.35:8000";
 
 /* Authentication endpoints */
 export const API_REG: string = `${BACKEND_ENDPOINT}/api/auth/register`; //POST

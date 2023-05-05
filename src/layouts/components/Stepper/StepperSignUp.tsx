@@ -135,26 +135,8 @@ const StepperSignUp = (props: any) => {
     const [activeStep, setActiveStep] = useState<number>(
         verifyStep === 1 ? 1 : 0
     );
-    /*
-    const [state, setState] = useState<State>({
-        password: "",
-        password2: "",
-        showPassword: false,
-        showPassword2: false,
-    });
-    */
+
     const [affilationVal, setAffilationVal] = useState<string>("yes");
-
-    const eduData = props.universities;
-
-    useEffect(() => {
-        if (verifyStep == 1)
-            if (!checked && activeStep === 1) {
-                checkEmail();
-            }
-    }, [checked, activeStep, verifyStep]);
-
-    // Handle Stepper
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -165,6 +147,7 @@ const StepperSignUp = (props: any) => {
     };
 
     const handleNext = () => {
+        //заменить на switch
         if (activeStep === 0) {
             // @ts-ignore
             dispatch(regUser({ email: email }));
@@ -174,9 +157,9 @@ const StepperSignUp = (props: any) => {
             console.log(title, firstName, middleName, lastName);
         }
         if (activeStep === 4) {
-            console.log(primaryAffilation, primaryAffilationTitle);
+            //console.log(primaryAffilation, primaryAffilationTitle);
 
-            console.log("pass from stepper", password1);
+            //console.log("pass from stepper", password1);
             dispatch(
                 // @ts-ignore
                 saveReg({
@@ -200,51 +183,8 @@ const StepperSignUp = (props: any) => {
         setActiveStep(0);
         setChecked(false);
         setUniversity("");
-        //setState({ ...state, password: "", password2: "" });
     };
 
-    //удалить
-    const checkEmail = () => {
-        //проверить на правильность email
-        //для простоты будем считать что почта валидная
-
-        const emailDomain = email.split("@")[1];
-
-        if (emailDomain === undefined) return;
-
-        for (let i = 0; i < eduData.length; i++) {
-            let str: string = eduData[i].Domains; //.indexOf(emailArr[1]);
-
-            if (str !== null) {
-                let needle = emailDomain.indexOf(str);
-
-                if (needle > -1) {
-                    console.log(i, str, emailDomain);
-
-                    if (
-                        str.length === emailDomain.length ||
-                        str.length + needle === emailDomain.length
-                    ) {
-                        //ok
-                        console.log("yes");
-                        setUniversity(eduData[i].Name);
-                    } else {
-                        //ручная проверка
-                        console.log("no");
-                    }
-                    setChecked(true);
-
-                    return;
-                }
-            }
-        }
-
-        setChecked(true);
-    };
-
-    // Handle Password
-
-    // Handle Confirm Password
     const handlePasswordEqualCheck = () => {
         if (
             ref1?.current?.children[0]?.value === "" ||
@@ -259,8 +199,6 @@ const StepperSignUp = (props: any) => {
             setPassword1(ref1?.current?.children[0]?.value);
         } else setLockPasswords(true);
     };
-
-    // Handle Language
 
     const getStepContent = (step: number) => {
         switch (step) {
