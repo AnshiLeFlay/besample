@@ -5,7 +5,6 @@ import {
     logoutUserHandler,
     refreshAccessTokenHandler,
     registerUserHandler,
-    registerUserHandlerTest,
     resetPasswordHandler,
     verifyEmailHandler,
 } from "../controllers/auth.controller";
@@ -29,8 +28,6 @@ router.get("/register", validate(registerUserSchema), registerUserHandler);
 router.post("/login", validate(loginUserSchema), loginUserHandler);
 
 router.get("/refresh", refreshAccessTokenHandler);
-
-router.post("/test", registerUserHandlerTest);
 
 router.get("/logout", deserializeUser, requireUser, logoutUserHandler);
 
