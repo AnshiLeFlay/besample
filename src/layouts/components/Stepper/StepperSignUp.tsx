@@ -13,14 +13,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import Stack from "@mui/material/Stack";
-import DraftsOutlinedIcon from "@mui/icons-material/DraftsOutlined";
-import InfoIcon from "@mui/icons-material/Info";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 
 // ** Icon Imports
 
@@ -33,22 +30,17 @@ import toast from "react-hot-toast";
 // ** Styled Component
 import StepperWrapper from "src/@core/styles/mui/stepper";
 import SignUpFooter from "../SignUpFooter";
-import {
-    FormControl,
-    OutlinedInput,
-    InputAdornment,
-    IconButton,
-} from "@mui/material";
-import Icon from "src/@core/components/icon";
+import { FormControl } from "@mui/material";
+
 import Email from "./Email";
 import Holder from "./Holder";
-import StepMessage from "./StepMessage";
 import { useDispatch } from "react-redux";
 import { regUser, saveReg } from "src/store/apps/user";
 import { useSelector } from "react-redux";
 import { RootState } from "src/store";
 import FirstEmailInput from "./Steps/FirstEmailInput";
 import SecondEmailVerification from "./Steps/SecondEmailVerification";
+import ThirdPasswords from "./Steps/ThirdPasswords";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
@@ -105,13 +97,10 @@ const StepperSignUp = (props: any) => {
         // @ts-ignore
         verifyPayload?.email !== undefined ? verifyPayload.email : ""
     );
-    const [checked, setChecked] = useState<boolean>(false);
+
     const [university, setUniversity] = useState<string>("");
-    const [showPassword1, setShowPassword1] = useState<boolean>(false);
-    const [showPassword2, setShowPassword2] = useState<boolean>(false);
+
     const [lockPasswords, setLockPasswords] = useState<boolean>(true);
-    const ref1 = useRef<any>(null);
-    const ref2 = useRef<any>(null);
     const [password1, setPassword1] = useState<string>("");
     const [title, setTitle] = useState<string>("No title");
     const [firstName, setFirstName] = useState<string>("");
@@ -168,25 +157,10 @@ const StepperSignUp = (props: any) => {
             toast.success("Form Submitted");
         }
     };
+
     const handleReset = () => {
         setActiveStep(0);
-        setChecked(false);
         setUniversity("");
-    };
-
-    const handlePasswordEqualCheck = () => {
-        if (
-            ref1?.current?.children[0]?.value === "" ||
-            ref2?.current?.children[0]?.value === ""
-        )
-            return;
-        if (
-            ref1?.current?.children[0]?.value ===
-            ref2?.current?.children[0]?.value
-        ) {
-            setLockPasswords(false);
-            setPassword1(ref1?.current?.children[0]?.value);
-        } else setLockPasswords(true);
     };
 
     const getStepContent = (step: number) => {
@@ -198,118 +172,7 @@ const StepperSignUp = (props: any) => {
                     <SecondEmailVerification checked={false} academic={false} />
                 );
             case 2:
-                return (
-                    <Fragment key={step}>
-                        <Grid alignItems={"center"} item xs={12}>
-                            <Box mb={4} sx={{ textAlign: "center" }}>
-                                <Typography variant="h5">
-                                    Create a password
-                                </Typography>
-                            </Box>
-                            <Email>{email}</Email>
-                            <FormControl fullWidth>
-                                <OutlinedInput
-                                    placeholder="Password"
-                                    id="auth-login-v2-password-1"
-                                    autoComplete="new-password"
-                                    ref={ref1}
-                                    type={showPassword1 ? "text" : "password"}
-                                    onChange={handlePasswordEqualCheck}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                edge="end"
-                                                onMouseDown={(e) =>
-                                                    e.preventDefault()
-                                                }
-                                                onClick={() =>
-                                                    setShowPassword1(
-                                                        !showPassword1
-                                                    )
-                                                }
-                                            >
-                                                <Icon
-                                                    icon={
-                                                        showPassword1
-                                                            ? "tabler:eye"
-                                                            : "tabler:eye-off"
-                                                    }
-                                                    fontSize={20}
-                                                />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            </FormControl>
-                            <Box
-                                mb={3}
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "5px",
-                                }}
-                            >
-                                <InfoIcon
-                                    sx={{ fontSize: 12, marginTop: 0.5 }}
-                                />
-                                <Typography
-                                    sx={{ lineHeight: "140%" }}
-                                    variant="caption"
-                                >
-                                    Must be at least 8 symbols, must contain
-                                    <br />a letter, a number, and a special
-                                    character
-                                </Typography>
-                            </Box>
-                            <FormControl fullWidth>
-                                <OutlinedInput
-                                    id="auth-login-v2-password-2"
-                                    autoComplete="new-password"
-                                    ref={ref2}
-                                    placeholder="Confirm password"
-                                    type={showPassword2 ? "text" : "password"}
-                                    onChange={handlePasswordEqualCheck}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                edge="end"
-                                                onMouseDown={(e) =>
-                                                    e.preventDefault()
-                                                }
-                                                onClick={() =>
-                                                    setShowPassword2(
-                                                        !showPassword2
-                                                    )
-                                                }
-                                            >
-                                                <Icon
-                                                    icon={
-                                                        showPassword2
-                                                            ? "tabler:eye"
-                                                            : "tabler:eye-off"
-                                                    }
-                                                    fontSize={20}
-                                                />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
-                            </FormControl>
-                            <Box mt={9}>
-                                <Button
-                                    sx={{ height: "56px" }}
-                                    size="large"
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleNext}
-                                >
-                                    Next step
-                                </Button>
-                            </Box>
-                            <SignUpFooter />
-                        </Grid>
-                    </Fragment>
-                );
+                return <ThirdPasswords />;
             case 3:
                 return (
                     <Fragment key={step}>

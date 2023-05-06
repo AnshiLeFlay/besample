@@ -21,6 +21,28 @@ export const setStep = createAction("stepper/step", (step: number) => {
     };
 });
 
+export const setPassword = createAction(
+    "stepper/password",
+    (password: string) => {
+        return {
+            payload: {
+                password,
+            },
+        };
+    }
+);
+
+export const setPasswordConfirm = createAction(
+    "stepper/passwordConfirm",
+    (password: string) => {
+        return {
+            payload: {
+                password,
+            },
+        };
+    }
+);
+
 export const nextStep = createAction("stepper/nextStep");
 export const backStep = createAction("stepper/backStep");
 
@@ -29,6 +51,8 @@ export const appStepperSlice = createSlice({
     initialState: {
         step: 0,
         email: "",
+        password: "",
+        passwordConfirm: "",
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -44,6 +68,12 @@ export const appStepperSlice = createSlice({
             })
             .addCase(backStep, (state) => {
                 state.step--;
+            })
+            .addCase(setPassword, (state, action) => {
+                state.password = action.payload.password;
+            })
+            .addCase(setPasswordConfirm, (state, action) => {
+                state.passwordConfirm = action.payload.password;
             });
     },
 });
