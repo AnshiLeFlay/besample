@@ -41,6 +41,7 @@ import { RootState } from "src/store";
 import FirstEmailInput from "./Steps/FirstEmailInput";
 import SecondEmailVerification from "./Steps/SecondEmailVerification";
 import ThirdPasswords from "./Steps/ThirdPasswords";
+import FourthAbout from "./Steps/FourthAbout";
 
 //import styles from './styles.module.css'
 /* m/p 1 = 4px = 0.25rem */
@@ -174,80 +175,7 @@ const StepperSignUp = (props: any) => {
             case 2:
                 return <ThirdPasswords />;
             case 3:
-                return (
-                    <Fragment key={step}>
-                        <Grid alignItems={"center"} item xs={12}>
-                            <Box mb={2.5} sx={{ textAlign: "center" }}>
-                                <Typography variant="h5">About you</Typography>
-                            </Box>
-                            <Box mb={5} sx={{ textAlign: "center" }}>
-                                <Typography variant="caption">
-                                    Complete your profile to launch studies
-                                    <br />
-                                    and collaborate with others
-                                </Typography>
-                            </Box>
-                            <Email>{email}</Email>
-                            <Box sx={{ display: "flex", gap: "0.25rem" }}>
-                                <FormControl>
-                                    <Select
-                                        defaultValue="No title"
-                                        id="title-select"
-                                        onChange={(e) =>
-                                            setTitle(e.target.value)
-                                        }
-                                    >
-                                        <MenuItem value="No title">
-                                            No title
-                                        </MenuItem>
-                                        <MenuItem value={"Mr."}>Mr.</MenuItem>
-                                        <MenuItem value={"Ms."}>Ms.</MenuItem>
-                                        <MenuItem value={"Mrs."}>Mrs.</MenuItem>
-                                        <MenuItem value={"Dr."}>Dr.</MenuItem>
-                                        <MenuItem value={"Prof."}>
-                                            Prof.
-                                        </MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <TextField
-                                    size="medium"
-                                    fullWidth
-                                    sx={{ mb: 4 }}
-                                    placeholder="First Name"
-                                    onChange={(e) =>
-                                        setFirstName(e.target.value)
-                                    }
-                                />
-                            </Box>
-                            <TextField
-                                size="medium"
-                                fullWidth
-                                sx={{ mb: 4 }}
-                                placeholder="Middle Name"
-                                onChange={(e) => setMiddleName(e.target.value)}
-                            />
-                            <TextField
-                                size="medium"
-                                fullWidth
-                                sx={{ mb: 4 }}
-                                placeholder="Last Name"
-                                onChange={(e) => setLastName(e.target.value)}
-                            />
-                            <Box mt={4}>
-                                <Button
-                                    sx={{ height: "56px" }}
-                                    size="large"
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={handleNext}
-                                >
-                                    Next step
-                                </Button>
-                            </Box>
-                            <SignUpFooter />
-                        </Grid>
-                    </Fragment>
-                );
+                return <FourthAbout />;
             case 4:
                 return (
                     <Fragment key={step}>

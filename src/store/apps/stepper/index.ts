@@ -43,6 +43,47 @@ export const setPasswordConfirm = createAction(
     }
 );
 
+export const changeTitle = createAction("stepper/title", (title: string) => {
+    return {
+        payload: {
+            title,
+        },
+    };
+});
+
+export const changeFirstName = createAction(
+    "stepper/firstName",
+    (firstName: string) => {
+        return {
+            payload: {
+                firstName,
+            },
+        };
+    }
+);
+
+export const changeMiddleName = createAction(
+    "stepper/middleName",
+    (middleName: string) => {
+        return {
+            payload: {
+                middleName,
+            },
+        };
+    }
+);
+
+export const changeLastName = createAction(
+    "stepper/lastName",
+    (lastName: string) => {
+        return {
+            payload: {
+                lastName,
+            },
+        };
+    }
+);
+
 export const nextStep = createAction("stepper/nextStep");
 export const backStep = createAction("stepper/backStep");
 
@@ -53,6 +94,12 @@ export const appStepperSlice = createSlice({
         email: "",
         password: "",
         passwordConfirm: "",
+        about: {
+            title: "No title",
+            firstName: "",
+            middleName: "",
+            lastName: "",
+        },
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -74,6 +121,18 @@ export const appStepperSlice = createSlice({
             })
             .addCase(setPasswordConfirm, (state, action) => {
                 state.passwordConfirm = action.payload.password;
+            })
+            .addCase(changeTitle, (state, action) => {
+                state.about.title = action.payload.title;
+            })
+            .addCase(changeFirstName, (state, action) => {
+                state.about.firstName = action.payload.firstName;
+            })
+            .addCase(changeMiddleName, (state, action) => {
+                state.about.middleName = action.payload.middleName;
+            })
+            .addCase(changeLastName, (state, action) => {
+                state.about.lastName = action.payload.lastName;
             });
     },
 });
