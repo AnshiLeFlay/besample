@@ -84,6 +84,39 @@ export const changeLastName = createAction(
     }
 );
 
+export const changeAffilation = createAction(
+    "stepper/affilation",
+    (primaryAffilation: string) => {
+        return {
+            payload: {
+                primaryAffilation,
+            },
+        };
+    }
+);
+
+export const setPosition = createAction(
+    "stepper/position",
+    (position: string) => {
+        return {
+            payload: {
+                position,
+            },
+        };
+    }
+);
+
+export const setUniversity = createAction(
+    "stepper/university",
+    (university: string) => {
+        return {
+            payload: {
+                university,
+            },
+        };
+    }
+);
+
 export const nextStep = createAction("stepper/nextStep");
 export const backStep = createAction("stepper/backStep");
 
@@ -100,6 +133,11 @@ export const appStepperSlice = createSlice({
             middleName: "",
             lastName: "",
         },
+        affilation: {
+            primaryAffilation: "",
+            position: "",
+        },
+        university: "",
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -133,6 +171,16 @@ export const appStepperSlice = createSlice({
             })
             .addCase(changeLastName, (state, action) => {
                 state.about.lastName = action.payload.lastName;
+            })
+            .addCase(changeAffilation, (state, action) => {
+                state.affilation.primaryAffilation =
+                    action.payload.primaryAffilation;
+            })
+            .addCase(setPosition, (state, action) => {
+                state.affilation.position = action.payload.position;
+            })
+            .addCase(setUniversity, (state, action) => {
+                state.university = action.payload.university;
             });
     },
 });
