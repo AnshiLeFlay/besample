@@ -6,6 +6,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { API_EMAIL_VERIFY, API_REG, API_RESET_PASS } from "src/utils/endpoints";
+import { display } from "@mui/system";
 
 interface DataParams {
     q: string;
@@ -138,17 +139,29 @@ export const saveReg = createAsyncThunk(
     }
 );
 
+interface initialState {
+    data: any;
+    total: any;
+    params: any;
+    allData: any;
+    status: any;
+    verify: any;
+    step: any;
+}
+
+const initialState: any = {
+    data: [],
+    total: 1,
+    params: {},
+    allData: [],
+    status: {},
+    verify: {},
+    step: 0,
+};
+
 export const appUsersSlice = createSlice({
     name: "appUsers",
-    initialState: {
-        data: [],
-        total: 1,
-        params: {},
-        allData: [],
-        status: {},
-        verify: {},
-        step: 0,
-    },
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder

@@ -1,14 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import SignUpFooter from "../../SignUpFooter";
 import { useDispatch, useSelector } from "react-redux";
 import { changeEmail, nextStep } from "src/store/apps/stepper";
+import { regUser } from "src/store/apps/user";
 import { RootState } from "src/store";
 
 const FirstEmailInput = () => {
     const dispatch = useDispatch();
     const email = useSelector((state: RootState) => state.stepper.email);
+    const status = useSelector((state: RootState) => state.user.status);
+
+    const handleSend = async () => {
+        // @ts-ignore
+        dispatch(regUser({ email: email }));
+        //dispatch(nextStep);
+    };
+
+    useEffect(() => {
+        console.log(status);
+        if (status?.status !== undefined) {
+            if (status.status === "success") {
+                if (status?.code !== undefined) {
+                    switch (status.code) {
+                        case "login":
+                            //redirect to login page with prefilled email
+                            break;
+                        case "reset":
+                            //redirect to reset password page
+                            break;
+                        case "verifyEmail":
+                        case "regEmail":
+                            //check your email
+                            dispatch(nextStep());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                console.log("error", status?.message);
+            }
+        }
+    }, [status, dispatch]);
 
     return (
         <Grid item xs={12}>
@@ -47,7 +82,7 @@ const FirstEmailInput = () => {
                     size="large"
                     fullWidth
                     variant="contained"
-                    onClick={() => dispatch(nextStep)}
+                    onClick={handleSend}
                 >
                     Verify email
                 </Button>

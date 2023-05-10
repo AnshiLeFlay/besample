@@ -25,7 +25,22 @@ router.post("/register", validate(registerUserSchema), registerUserHandler);
 
 router.get("/register", validate(registerUserSchema), registerUserHandler);
 
+/*
+router.get("/test", async (req, res, next) => {
+    const test = await getDomainByID(1345);
+    res.status(200).json({
+        message: test,
+    });
+});
+*/
+
 router.post("/login", validate(loginUserSchema), loginUserHandler);
+
+router.get(
+    "/verifyemail/:verificationCode",
+    validate(verifyEmailSchema),
+    verifyEmailHandler
+);
 
 router.get("/refresh", refreshAccessTokenHandler);
 

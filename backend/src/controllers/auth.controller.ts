@@ -21,7 +21,12 @@ import AppError from "../utils/appError";
 import redisClient from "../utils/connectRedis";
 import { signJwt, verifyJwt } from "../utils/jwt";
 import Email from "../utils/email";
-import { domainCheck, generateRandomPassword } from "../utils/functions";
+import {
+    domainCheck,
+    generateRandomPassword,
+    getDomainByID,
+} from "../utils/functions";
+import { manual } from "prismjs";
 
 const cookiesOptions: CookieOptions = {
     httpOnly: true,
@@ -187,6 +192,7 @@ export const registerUserHandler = async (
                 active: active,
                 academic: academic,
                 academic_type: academic_type,
+                affilation: check.id !== undefined ? check.id : 0,
             });
 
             /* sending email */
@@ -194,13 +200,9 @@ export const registerUserHandler = async (
                 "origin"
             )}/register/verify/${verifyCode}`;
             try {
-                if (academic_type === "manual")
+                if (academic_type !== "manual")
                     await new Email(user, redirectUrl).sendVerificationCode();
-                else
-                    await new Email(
-                        user,
-                        "https://besample.app/version-review/getstarted"
-                    ).sendWaitList();
+                else await new Email(user, redirectUrl).sendWaitList();
 
                 await updateUser({ id: user.id }, { verificationCode });
 
@@ -477,6 +479,7 @@ export const verifyEmailHandler = async (
             .update(resetToken)
             .digest("hex");
 
+        //надо перенести reset token после верификации
         const user = await updateUser(
             { verificationCode },
             {
@@ -485,7 +488,12 @@ export const verifyEmailHandler = async (
                 passwordResetToken,
                 passwordResetAt: new Date(Date.now() + 10 * 60 * 1000),
             },
-            { email: true }
+            {
+                email: true,
+                academic: true,
+                academic_type: true,
+                affilation: true,
+            }
         );
 
         if (!user) {
@@ -521,13 +529,47 @@ export const verifyEmailHandler = async (
                         message,
                     });
                     */
+        let page = "";
 
-        res.status(200).json({
-            status: "success",
-            message: "Email verified successfully",
-            email: user.email,
-            reset: resetToken,
-        });
+        if (user.academic === true) {
+            if (user.active) {
+                //reset password page
+                page = "reset";
+            } else {
+                //success step
+                page = "success";
+            }
+        } else {
+            if (user.academic_type === "manual") {
+                //we are enable to verify email
+            } else {
+                //send log to admin
+                //we are enable to verify email
+            }
+            page = "waitlist";
+        }
+
+        if (page === "waitlist")
+            res.status(200).json({
+                status: "success",
+                message: "Email verified successfully",
+                email: user.email,
+                page: page,
+            });
+        else {
+            let universityName = "";
+            if (user.academic_type === "university_domain") {
+                universityName = await getDomainByID(user.affilation!);
+            }
+            res.status(200).json({
+                status: "success",
+                message: "Email verified successfully",
+                email: user.email,
+                page: page,
+                reset: resetToken,
+                universityName: universityName,
+            });
+        }
         /*} catch (err: any) {
             console.log("err reset", err.message);
             await updateUser(

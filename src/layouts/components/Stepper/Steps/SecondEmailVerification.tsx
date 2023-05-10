@@ -52,7 +52,7 @@ const SecondEmailVerification = (props: {
                                             size="large"
                                             fullWidth
                                             variant="contained"
-                                            onClick={() => dispatch(nextStep)}
+                                            onClick={() => dispatch(nextStep())}
                                         >
                                             Next step
                                         </Button>
@@ -83,7 +83,7 @@ const SecondEmailVerification = (props: {
                                     fullWidth
                                     variant="contained"
                                     onClick={() => {
-                                        dispatch(backStep);
+                                        dispatch(backStep());
                                     }}
                                 >
                                     Try another email

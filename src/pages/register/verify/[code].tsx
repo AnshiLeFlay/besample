@@ -16,6 +16,13 @@ import { verifyEmail } from "src/store/apps/user";
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/store";
+import {
+    academicStatus,
+    changeEmail,
+    checkedStatus,
+    setStep,
+    setUniversity,
+} from "src/store/apps/stepper";
 
 const Verify = () => {
     const [lock, setLock] = useState<boolean>(false);
@@ -75,7 +82,26 @@ const Verify = () => {
                         {
                             // @ts-ignore
                             verify?.status === "success" && (
-                                <Link href="/register">Next step</Link>
+                                <Link
+                                    onClick={() => {
+                                        dispatch(setStep(1));
+                                        dispatch(changeEmail(verify?.email));
+                                        dispatch(
+                                            setUniversity(
+                                                verify?.universityName
+                                            )
+                                        );
+                                        if (verify?.page === "waitlist") {
+                                            dispatch(academicStatus(false));
+                                        } else {
+                                            dispatch(academicStatus(true));
+                                        }
+                                        dispatch(checkedStatus(true));
+                                    }}
+                                    href="/register"
+                                >
+                                    Next step
+                                </Link>
                             )
                         }
                     </Box>

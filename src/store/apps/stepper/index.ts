@@ -120,6 +120,27 @@ export const setUniversity = createAction(
 export const nextStep = createAction("stepper/nextStep");
 export const backStep = createAction("stepper/backStep");
 
+export const checkedStatus = createAction(
+    "stepper/checkedStatus",
+    (check: boolean) => {
+        return {
+            payload: {
+                check,
+            },
+        };
+    }
+);
+export const academicStatus = createAction(
+    "stepper/academicStatus",
+    (check: boolean) => {
+        return {
+            payload: {
+                check,
+            },
+        };
+    }
+);
+
 export const appStepperSlice = createSlice({
     name: "appStepper",
     initialState: {
@@ -138,6 +159,8 @@ export const appStepperSlice = createSlice({
             position: "",
         },
         university: "",
+        checkedStatus: false,
+        academicStatus: false,
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -181,6 +204,12 @@ export const appStepperSlice = createSlice({
             })
             .addCase(setUniversity, (state, action) => {
                 state.university = action.payload.university;
+            })
+            .addCase(checkedStatus, (state, action) => {
+                state.checkedStatus = action.payload.check;
+            })
+            .addCase(academicStatus, (state, action) => {
+                state.academicStatus = action.payload.check;
             });
     },
 });

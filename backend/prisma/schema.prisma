@@ -15,6 +15,7 @@ model User {
   verified         Boolean?             @default(false)
   academic         Boolean?             
   academic_type    AcademicEnumType?    @default(none)
+  affilation       Int?                 
   active           Boolean?             @default(false)
   password         String
   role             RoleEnumType?        @default(user)

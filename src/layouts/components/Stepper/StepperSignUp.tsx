@@ -81,6 +81,12 @@ const StepperSignUp = (props: any) => {
     const dispatch = useDispatch();
     const activeStep = useSelector((state: RootState) => state.stepper.step);
     const verifyStep = useSelector((state: RootState) => state.user.step);
+    const checked = useSelector(
+        (state: RootState) => state.stepper.checkedStatus
+    );
+    const academic = useSelector(
+        (state: RootState) => state.stepper.academicStatus
+    );
 
     const getStepContent = (step: number) => {
         switch (step) {
@@ -88,7 +94,10 @@ const StepperSignUp = (props: any) => {
                 return <FirstEmailInput />;
             case 1:
                 return (
-                    <SecondEmailVerification checked={false} academic={false} />
+                    <SecondEmailVerification
+                        checked={checked}
+                        academic={academic}
+                    />
                 );
             case 2:
                 return <ThirdPasswords />;

@@ -101,7 +101,7 @@ const FourthAbout = () => {
                         size="large"
                         fullWidth
                         variant="contained"
-                        onClick={() => dispatch(nextStep)}
+                        onClick={() => dispatch(nextStep())}
                     >
                         Next step
                     </Button>

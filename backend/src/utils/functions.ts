@@ -12,6 +12,27 @@ export const generateRandomPassword = (length: number) => {
     return password;
 };
 
+export const getDomainByID = async (ID: number): Promise<string> => {
+    try {
+        const prisma = new PrismaClient();
+        const university: any = await prisma.universities.findFirst({
+            where: {
+                id: ID,
+            },
+        });
+
+        console.log(university);
+
+        if (university === undefined || university === null) {
+            return "";
+        }
+
+        return university.Name;
+    } catch (err: any) {
+        return err;
+    }
+};
+
 export const domainCheck = async (
     email: string
 ): Promise<{
