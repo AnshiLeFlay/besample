@@ -21,12 +21,27 @@ import {
     nextStep,
     setPosition,
 } from "src/store/apps/stepper";
+import { saveReg } from "src/store/apps/user";
 
 const FifthAffilation = () => {
     const [affilationVal, setAffilationVal] = useState<string>("yes");
 
     const dispatch = useDispatch();
     const step = useSelector((state: RootState) => state.stepper.step);
+    const resetToken = useSelector(
+        (state: RootState) => state.user.verify?.reset
+    );
+    const password = useSelector((state: RootState) => state.stepper.password);
+    const firstName = useSelector(
+        (state: RootState) => state.stepper.about.firstName
+    );
+    const middleName = useSelector(
+        (state: RootState) => state.stepper.about.middleName
+    );
+    const lastName = useSelector(
+        (state: RootState) => state.stepper.about.lastName
+    );
+    const title = useSelector((state: RootState) => state.stepper.about.title);
     const university = useSelector(
         (state: RootState) => state.stepper.university
     );
@@ -136,7 +151,20 @@ const FifthAffilation = () => {
                         size="large"
                         fullWidth
                         variant="contained"
-                        onClick={() => dispatch(nextStep)}
+                        onClick={() => {
+                            dispatch(
+                                // @ts-ignore
+                                saveReg({
+                                    // @ts-ignore
+                                    resetCode: resetToken,
+                                    password: password,
+                                    userData: {
+                                        name: `${title} ${firstName} ${middleName} ${lastName}`,
+                                    },
+                                })
+                            );
+                            dispatch(nextStep());
+                        }}
                     >
                         Welcome to Besample
                     </Button>

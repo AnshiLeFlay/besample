@@ -174,6 +174,10 @@ export const registerUserHandler = async (
                     break;
                 case "ac":
                 case "edu":
+                case "whitelist":
+                    academic_type = check.type;
+                    academic = true;
+                    break;
                 case "manual":
                     academic_type = check.type;
                     break;

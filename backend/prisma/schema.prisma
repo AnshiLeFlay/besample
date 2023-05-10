@@ -39,6 +39,12 @@ model Universities {
   id         Int     @id @default(autoincrement())
 }
 
+model Whitelist {
+  id         Int        @id @default(autoincrement())
+  email      String     
+  comment    String?    
+}
+
 enum RoleEnumType {
   user
   admin

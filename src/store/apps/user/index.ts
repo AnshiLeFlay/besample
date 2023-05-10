@@ -112,7 +112,11 @@ export const verifyEmail = createAsyncThunk(
 //saveRegistration
 export const saveReg = createAsyncThunk(
     "appUsers/saveReg",
-    async (data: any) => {
+    async (data: {
+        resetCode: string;
+        password: string;
+        userData: { name: string };
+    }) => {
         const { resetCode, password, userData } = data;
 
         try {
