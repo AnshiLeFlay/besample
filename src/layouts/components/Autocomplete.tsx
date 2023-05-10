@@ -24,8 +24,13 @@ import MuiAutocomplete, { AutocompleteRenderInputParams } from '@mui/material/Au
 import axios from 'axios'
 
 // ** Types Imports
-import { AppBarSearchType } from 'src/@fake-db/types'
+//import { AppBarSearchType } from 'src/@fake-db/types'
 import { Settings } from 'src/@core/context/settingsContext'
+type AppBarSearchType = {
+  title: string
+  category: any
+  icon: string
+}
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -383,9 +388,9 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
       })
       .then(response => {
         if (response.data && response.data.length) {
-          setOptions(response.data)
+          //setOptions(response.data)
         } else {
-          setOptions([])
+          //setOptions([])
         }
       })
   }, [searchValue])
@@ -403,7 +408,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
   }, [])
 
   // Handle click event on a list item in search result
-  const handleOptionClick = (obj: AppBarSearchType) => {
+  const handleOptionClick = (obj: any /*AppBarSearchType*/) => {
     setSearchValue('')
     setOpenDialog(false)
     if (obj.url) {
