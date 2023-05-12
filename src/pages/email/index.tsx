@@ -24,7 +24,7 @@ const EmailPage = () => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `${BACKEND_ENDPOINT_LOCAL}/api/auth/domaincheck/?email=${email}`
+                `${BACKEND_ENDPOINT}/api/auth/domaincheck/?email=${email}`
             );
             console.log(response.data);
             setAns(response.data?.answer?.type);
