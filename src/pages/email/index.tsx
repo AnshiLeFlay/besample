@@ -21,13 +21,18 @@ const EmailPage = () => {
     const [ans, setAns] = useState("");
 
     const handleSend = async () => {
+        setAns("");
         setLoading(true);
         try {
             const response = await axios.get(
                 `${BACKEND_ENDPOINT}/api/auth/domaincheck/?email=${email}`
             );
             console.log(response.data);
-            setAns(response.data?.answer?.type);
+            let ans = `${response.data?.answer?.type}`;
+            if (response.data?.answer?.type !== "manual") ans = `${ans} - true`;
+            else ans = `${ans} - false`;
+
+            setAns(ans);
             setLoading(false);
         } catch (arr: any) {
             setLoading(false);
@@ -35,7 +40,7 @@ const EmailPage = () => {
     };
 
     return (
-        <Card>
+        <Card style={{ marginTop: "150px" }}>
             <CardContent>
                 <Grid item xs={12}>
                     <Box
